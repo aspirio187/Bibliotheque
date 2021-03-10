@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Bibliotheque.EntityFramework.DbContexts;
+using Bibliotheque.Views;
 using Prism.Ioc;
 using Prism.Unity;
 
@@ -14,12 +16,12 @@ namespace Bibliotheque
     {
         protected override Window CreateShell()
         {
-            //return Container.Resolve<ShellView>();
+            return Container.Resolve<ShellView>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.Register<LibraryContext>();
         }
     }
 }

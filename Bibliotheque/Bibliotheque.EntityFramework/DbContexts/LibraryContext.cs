@@ -1,4 +1,4 @@
-﻿using Bibliotheque.Entities;
+﻿using Bibliotheque.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bibliotheque.DbContexts
+namespace Bibliotheque.EntityFramework.DbContexts
 {
     public class LibraryContext : DbContext
     {
@@ -21,10 +21,10 @@ namespace Bibliotheque.DbContexts
         public DbSet<UserEntity> Users { get; set; }
         #endregion
 
-        public LibraryContext(DbContextOptions<LibraryContext> options)
-            : base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=BibliothequeDb;Trusted_Connection=True;");
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bibliotheque.Entities
+namespace Bibliotheque.EntityFramework.Entities
 {
     public class ClassificationEntity
     {
