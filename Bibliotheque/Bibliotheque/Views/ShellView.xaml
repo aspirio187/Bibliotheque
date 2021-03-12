@@ -7,8 +7,47 @@
         xmlns:prism="http://prismlibrary.com/"
         mc:Ignorable="d"
         Title="ShellView" 
-        Height="450" Width="800">
+        Height="600" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Column="0"
+                    Grid.Row="0" >
+            <DockPanel>
+                <Button Content="B" Width="30" Height="30"/>
+            </DockPanel>
+            <DockPanel HorizontalAlignment="Left">
+                <Button Content="E" Width="30" Height="30" />
+                <Button Content="C" Width="30" Height="30" />
+            </DockPanel>
+            <DockPanel HorizontalAlignment="Left">
+                <Button Content="P" Width="30" Height="30" />
+            </DockPanel>
+
+            <DockPanel HorizontalAlignment="Left" >
+                <Button Content="Accueil" />
+                <Button Content="Livres" />
+            </DockPanel>
+
+            <DockPanel HorizontalAlignment="Right">
+                <Button Height="30" Width="30"      
+                    Name="MinimizeButton" />
+                <Button Height="30" Width="30"
+                    Name="ExitButton" />
+            </DockPanel>
+        </DockPanel>
+
+        <ContentControl Grid.Column="1"
+                        Grid.Row="1"
+                        prism:RegionManager.RegionName="CustomView" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" />
     </Grid>
 </Window>

@@ -1,0 +1,50 @@
+﻿<ContentControl x:Class="Bibliotheque.UI.Views.RegisterView"
+                xmlns:prism="http://prismlibrary.com/"
+                prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+             mc:Ignorable="d" >
+    <Grid Background="White">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="S'enregistrer" HorizontalContentAlignment="Center" FontSize="25"/>
+            <DockPanel>
+                <StackPanel Margin="5" >
+                    <TextBlock Text="Addresse email :" Margin="0 5" />
+                    <TextBox Text="exemple@mail.com" Width="200" />
+                    <TextBlock Text="Confirmer l'addresse email :" Margin="0 5" />
+                    <TextBox Text="exemple@mail.com" Width="200" />
+                    <TextBlock Text="Mot de passe :" Margin="0 5" />
+                    <PasswordBox PasswordChar="*" Width="200" />
+                    <TextBlock Text="Confirmer le mot de passe :" Margin="0 5" />
+                    <PasswordBox PasswordChar="*" Width="200" />
+                </StackPanel>
+                <StackPanel Margin="5" >
+                    <TextBlock Text="Prénom :" Margin="0 5" />
+                    <TextBox Width="200" />
+                    <TextBlock Text="Nom :" Margin="0 5" />
+                    <TextBox Width="200" />
+                    <TextBlock Text="Sex" Margin="0 5" />
+                    <ComboBox>
+                        <ComboBoxItem Content="Homme" />
+                        <ComboBoxItem Content="Femme" />
+                    </ComboBox>
+                    <TextBlock Text="Date de naissance :" Margin="0 5" />
+                    <DatePicker />
+                </StackPanel>
+                <StackPanel Margin="5" >
+                    <TextBlock Text="Rue et numéro :" Margin="0 5" />
+                    <TextBox Text="Avenue Louise 145" Width="200" />
+                    <TextBlock Text="Code postal :" Margin="0 5" />
+                    <TextBox Text="1000" Width="200" />
+                    <TextBlock Text="Numero de téléphone :" Margin="0 5" />
+                    <TextBox Width="200" />
+                </StackPanel>
+            </DockPanel>
+            <Label Content="ERROR" Foreground="Red" FontWeight="Bold" HorizontalContentAlignment="Center" Visibility="Hidden" />
+            <Button Content="S'enregistrer" />
+        </StackPanel>
+    </Grid>
+</ContentControl>

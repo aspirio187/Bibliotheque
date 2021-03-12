@@ -1,0 +1,21 @@
+﻿<ContentControl x:Class="Bibliotheque.UI.Views.LoginView"
+                xmlns:prism="http://prismlibrary.com/"
+                prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+             mc:Ignorable="d" >
+    <Grid Background="White">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="Se connecter" FontSize="25" Margin="10"/>
+            <TextBlock Text="Nom d'utilisateur :"  Margin="5 0"/>
+            <TextBox Text="example@mail.com" Margin="5"/>
+            <TextBlock Text="Mot de passe :" Margin="5 0"/>
+            <PasswordBox PasswordChar="*" Margin="5" />
+            <Button Content="Se connecter" />
+            <Button Content="S'enregistrer" />
+        </StackPanel>
+    </Grid>
+</ContentControl>
