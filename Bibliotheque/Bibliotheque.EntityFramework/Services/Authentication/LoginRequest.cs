@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bibliotheque.UI.Models
+namespace Bibliotheque.EntityFramework.Services.Authentication
 {
-    public class LoginModel
+    public class LoginRequest
     {
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         [EmailAddress]
         public string Email { get; set; }
-        [Required]
+
+        [Required(AllowEmptyStrings = false)]
         public string Password { get; set; }
     }
 }

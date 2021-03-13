@@ -12,6 +12,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
     {
         Task<bool> UserExistsAsync(Guid userId);
         Task<bool> EmailExistsAsync(string email);
+        Task<bool> UserIsBlackListed(Guid userId);
         void AddUser(UserEntity user);
         Task<IEnumerable<UserEntity>> GetUsersAsync();
         Task<UserEntity> GetUserAsync(Guid userId);
@@ -42,6 +43,19 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentNullException(nameof(email));
             return await m_Context.Users.AnyAsync(x => x.Email == email);
+        }
+
+        /// <summary>
+        /// Vérifie si l'utilisateur défini par l'ID en paramètre est dans la liste
+        /// des utilisateurs blacklisté
+        /// </summary>
+        /// <param name="userId">ID de l'utilisateur</param>
+        /// <returns>true Si l'utilisateur est blacklisté. false Dans le cas contraire</returns>
+        public async Task<bool> UserIsBlackListed(Guid userId)
+        {
+            if (userId == Guid.Empty)
+                throw new ArgumentNullException(nameof(userId));
+            return await m_Context.BlackListeds.AnyAsync(x => x.UserId == userId);
         }
 
         /// <summary>

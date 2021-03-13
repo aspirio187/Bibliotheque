@@ -17,16 +17,5 @@ namespace Bibliotheque.UI.ViewModels
             m_RegionManager = (RegionManager)regionManager ??
                 throw new ArgumentNullException(nameof(regionManager));
         }
-
-        public void CreateNavigationBar()
-        {
-            var view = NavigationView();
-
-            m_RegionManager.Regions["NavigationBar"].Add(view);
-            if (!m_RegionManager.Regions["NavigationBar"].ActiveViews.Any(v => v.Equals(view)))
-            {
-                m_RegionManager.Regions["NavigationBar"].Activate(view);
-            }
-        }
     }
 }

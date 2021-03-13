@@ -32,7 +32,10 @@ namespace Bibliotheque.EntityFramework.Entities
         [Required(AllowEmptyStrings = false)]
         [StringLength(10)]
         public string TelefoneNumber { get; set; }
-        public bool IsBanned { get; set; }
+        // Token crée lors de la création et mis à jours lors des modification
+        // de mot de passe.
+        [Required(AllowEmptyStrings = false)]
+        public Guid Token { get; set; }
 
         // Propriétés références
         [ForeignKey("RoleId")]

@@ -18,7 +18,7 @@ namespace Bibliotheque.UI.Views
     /// <summary>
     /// Logique d'interaction pour RegisterView.xaml
     /// </summary>
-    public partial class RegisterView : UserControl
+    public partial class RegisterView : ContentControl
     {
         public RegisterView()
         {
