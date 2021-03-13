@@ -90,19 +90,18 @@ namespace Bibliotheque.UI.ViewModels
                 return false;
             }
 
-            if (await m_Repository.UserIsBlackListed(response.UserId))
+            if (await m_Repository.UserIsBlackListed(response.Id))
             {
                 MessageErreur = "Vous êtes interdit dans cette bibliothèque!";
                 return false;
             }
 
-            using (StreamWriter writer = File.CreateText("UserConnection"))
+            if (!await LocalFileHelper.WriteJsonFile(GlobalInfos.UserSessionPath, response))
             {
-                foreach (PropertyInfo prop in response.GetType().GetProperties())
-                {
-                    await writer.WriteLineAsync(prop.ToString());
-                }
+                MessageErreur = "Une erreur est survenue lors de la connexion";
+                return false;
             }
+
             return true;
         }
 

@@ -30,7 +30,7 @@ namespace Bibliotheque.EntityFramework.Services.Authentication
             if (user.Password != passwordHash)
                 return null;
 
-            return new() { UserId = user.Id, Email = loginRequest.Email, Token = user.Token };
+            return new() { Id = user.Id, Email = loginRequest.Email, Token = user.Token };
         }
     }
 }

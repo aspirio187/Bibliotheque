@@ -13,6 +13,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> UserExistsAsync(Guid userId);
         Task<bool> EmailExistsAsync(string email);
         Task<bool> UserIsBlackListed(Guid userId);
+        Task<bool> UserTokenHasChanged(Guid userId, Guid token);
         void AddUser(UserEntity user);
         Task<IEnumerable<UserEntity>> GetUsersAsync();
         Task<UserEntity> GetUserAsync(Guid userId);
@@ -56,6 +57,22 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             if (userId == Guid.Empty)
                 throw new ArgumentNullException(nameof(userId));
             return await m_Context.BlackListeds.AnyAsync(x => x.UserId == userId);
+        }
+
+        /// <summary>
+        /// Vérifie si le token de l'utilisateur défini par l'ID en paramètre
+        /// a été changé.
+        /// </summary>
+        /// <param name="userId">ID de l'utilisateur</param>
+        /// <param name="token">Token a comparer</param>
+        /// <returns>true Si le token est identique. false Dans le cas contraire</returns>
+        public async Task<bool> UserTokenHasChanged(Guid userId, Guid token)
+        {
+            if (userId == Guid.Empty) throw new ArgumentNullException(nameof(userId));
+            if (token == Guid.Empty) throw new ArgumentNullException(nameof(token));
+            var user = await m_Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            return user.Token.Equals(token);
         }
 
         /// <summary>
