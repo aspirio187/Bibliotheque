@@ -29,7 +29,6 @@ namespace Bibliotheque.EntityFramework.Entities
         public string EAN { get; set; }
         [Required(AllowEmptyStrings = false)]
         public string ISBN { get; set; }
-        public int Quantity { get; set; }
 
         // Propriétés références
         [ForeignKey("CategoryId")]

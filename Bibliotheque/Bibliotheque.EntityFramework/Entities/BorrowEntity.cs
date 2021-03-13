@@ -13,14 +13,15 @@ namespace Bibliotheque.EntityFramework.Entities
         public DateTime BorrowingDate { get; set; }
         public DateTime ExpectedDeliveryDate { get; set; }
         public DateTime DeliveryDate { get; set; }
+        public int Quantity { get; set; }
         [Column(TypeName = "decimal(2,0)")]
         public decimal ExtraCharges { get; set; }
 
         [ForeignKey("UserId")]
         public UserEntity User { get; set; }
         public Guid UserId { get; set; }
-        [ForeignKey("BookId")]
-        public BookEntity Book { get; set; }
-        public int BookId { get; set; }
+        [ForeignKey("BookCopyId")]
+        public BookCopyEntity BookCopy { get; set; }
+        public int BookCopyId { get; set; }
     }
 }
