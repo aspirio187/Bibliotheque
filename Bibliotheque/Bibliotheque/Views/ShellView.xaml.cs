@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Bibliotheque.Views
+namespace Bibliotheque.UI.Views
 {
     /// <summary>
     /// Logique d'interaction pour ShellView.xaml

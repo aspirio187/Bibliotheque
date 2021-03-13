@@ -6,7 +6,7 @@ using Bibliotheque.UI.Models;
 using Bibliotheque.UI.Views;
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Services.Dialogs;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,18 +17,20 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class LoginViewModel : BindableBase, IDialogAware
+    public class LoginViewModel : BindableBase, INavigationAware
     {
         private readonly IMapper m_Mapper;
         private readonly ILibraryRepository m_Repository;
         private readonly IUserService m_UserService;
+
+        private IRegionNavigationService m_Region;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
         public DelegateCommand LoginCommand { get; set; }
-        public DelegateCommand RegisterCommand { get; set; }
+        public DelegateCommand NavigateToRegisterCommand { get; set; }
 
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
@@ -52,8 +54,6 @@ namespace Bibliotheque.UI.ViewModels
 
         private string m_MessageErreur;
 
-        public event Action<IDialogResult> RequestClose;
-
         public string MessageErreur
         {
             get { return m_MessageErreur; }
@@ -72,7 +72,7 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(userService));
 
             LoginCommand = new DelegateCommand(async () => await Login());
-            RegisterCommand = new DelegateCommand(Register);
+            NavigateToRegisterCommand = new DelegateCommand(NavigateToRegister);
         }
 
         public async Task<bool> LoginRequest(LoginModel login)
@@ -130,24 +130,27 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
-        public void Register()
+        public void NavigateToRegister()
         {
-            // TODO : Rediriger vers la page d'enregistrement
+            if (m_Region == null)
+                throw new ArgumentNullException(nameof(m_Region));
+            m_Region.RequestNavigate("RegisterView");
         }
 
-        public bool CanCloseDialog()
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            m_Region = navigationContext.Parameters.GetValue<IRegionNavigationService>("Region");
         }
 
-        public void OnDialogClosed()
+        public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            return true;
+            //throw new NotImplementedException();
         }
 
-        public void OnDialogOpened(IDialogParameters parameters)
+        public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
