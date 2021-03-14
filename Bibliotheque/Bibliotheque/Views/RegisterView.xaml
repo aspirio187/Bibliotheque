@@ -13,38 +13,49 @@
             <DockPanel>
                 <StackPanel Margin="5" >
                     <TextBlock Text="Addresse email :" Margin="0 5" />
-                    <TextBox Text="exemple@mail.com" Width="200" />
+                    <TextBox x:Name="EmailBox" Text="exemple@mail.com" Width="200" TextChanged="EmailBox_TextChanged" />
                     <TextBlock Text="Confirmer l'addresse email :" Margin="0 5" />
-                    <TextBox Text="exemple@mail.com" Width="200" />
+                    <TextBox x:Name="EmailConfirmationBox" Text="exemple@mail.com" Width="200" TextChanged="EmailConfirmationBox_TextChanged" />
                     <TextBlock Text="Mot de passe :" Margin="0 5" />
-                    <PasswordBox PasswordChar="*" Width="200" />
+                    <PasswordBox x:Name="PasswordBox" PasswordChar="*" Width="200" PasswordChanged="PasswordBox_PasswordChanged" />
                     <TextBlock Text="Confirmer le mot de passe :" Margin="0 5" />
-                    <PasswordBox PasswordChar="*" Width="200" />
+                    <PasswordBox x:Name="PasswordConfirmationBox" PasswordChar="*" Width="200" PasswordChanged="PasswordConfirmationBox_PasswordChanged" />
                 </StackPanel>
                 <StackPanel Margin="5" >
                     <TextBlock Text="Prénom :" Margin="0 5" />
-                    <TextBox Width="200" />
+                    <TextBox x:Name="FirstNameBox" Width="200" TextChanged="FirstNameBox_TextChanged" />
                     <TextBlock Text="Nom :" Margin="0 5" />
-                    <TextBox Width="200" />
-                    <TextBlock Text="Sex" Margin="0 5" />
-                    <ComboBox>
+                    <TextBox x:Name="LastNameBox" Width="200" TextChanged="LastNameBox_TextChanged" />
+                    <TextBlock Text="Sex :" Margin="0 5" />
+                    <ComboBox x:Name="cmbGender" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged" >
                         <ComboBoxItem Content="Homme" />
                         <ComboBoxItem Content="Femme" />
                     </ComboBox>
                     <TextBlock Text="Date de naissance :" Margin="0 5" />
-                    <DatePicker />
+                    <DatePicker x:Name="DateBox" SelectedDateChanged="DateBox_SelectedDateChanged" />
                 </StackPanel>
                 <StackPanel Margin="5" >
                     <TextBlock Text="Rue et numéro :" Margin="0 5" />
-                    <TextBox Text="Avenue Louise 145" Width="200" />
+                    <TextBox x:Name="StreetBox" Text="Avenue Louise 145" Width="200" TextChanged="StreetBox_TextChanged" />
+                    <TextBlock Text="Appartement" Margin="0 5" />
+                    <TextBox x:Name="AppartmentBox" Width="200" />
                     <TextBlock Text="Code postal :" Margin="0 5" />
-                    <TextBox Text="1000" Width="200" />
+                    <TextBox x:Name="ZipCodeBox" Text="1000" Width="200" TextChanged="ZipCodeBox_TextChanged" />
+                    <TextBlock Text="Ville" Margin="0 5"/>
+                    <TextBox x:Name="CityBox" Width="200" TextChanged="CityBox_TextChanged" />
                     <TextBlock Text="Numero de téléphone :" Margin="0 5" />
-                    <TextBox Width="200" />
+                    <TextBox x:Name="PhoneBox" Width="200" TextChanged="PhoneBox_TextChanged" />
                 </StackPanel>
             </DockPanel>
-            <Label Content="ERROR" Foreground="Red" FontWeight="Bold" HorizontalContentAlignment="Center" Visibility="Hidden" />
-            <Button Content="S'enregistrer" />
+            <Label Content="Tous les champs doivent être remplis (excepté l'appartement)" FontWeight="Bold" HorizontalContentAlignment="Left" />
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding ErrorRecord.ErrorMessage}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="S'enregistrer" IsEnabled="{Binding CanRegister}"/>
         </StackPanel>
     </Grid>
 </ContentControl>

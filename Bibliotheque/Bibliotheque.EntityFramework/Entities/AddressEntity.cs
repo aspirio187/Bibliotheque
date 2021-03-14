@@ -16,6 +16,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [Required(AllowEmptyStrings = false)]
         public string City { get; set; }
         [Required(AllowEmptyStrings = false)]
+        [StringLength(4)]
         public string ZipCode { get; set; }
     }
 }

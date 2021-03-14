@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Bibliotheque.UI.ViewModels
 {
@@ -18,6 +19,8 @@ namespace Bibliotheque.UI.ViewModels
         private readonly RegionManager m_RegionManager;
         private readonly IRegionNavigationService m_NavigationService;
         private readonly ILibraryRepository m_Repository;
+
+        private readonly string RegionName = "CustomView";
 
         /***************************************************/
         /**************** Propriétés objets ****************/
@@ -79,13 +82,18 @@ namespace Bibliotheque.UI.ViewModels
 
         public void NavigateToProfile()
         {
-            IRegion mainRegion = m_RegionManager.Regions["CustomView"];
-            //mainRegion.RequestNavigate("LoginView");
-            var parameters = new NavigationParameters();
-            //m_RegionManager.RequestNavigate("CustomView", "LoginView", parameters);
-            m_NavigationService.Region = mainRegion;
-            parameters.Add("Region", m_NavigationService);
-            m_NavigationService.RequestNavigate(new Uri("LoginView", UriKind.Relative), parameters);
+            if (IsConnected)
+            {
+                // TODO : Navigate to profile page
+            }
+            else
+            {
+                IRegion mainRegion = m_RegionManager.Regions[RegionName];
+                var parameters = new NavigationParameters();
+                m_NavigationService.Region = mainRegion;
+                parameters.Add(GlobalInfos.NavigationServiceName, m_NavigationService);
+                m_NavigationService.RequestNavigate(new Uri(GlobalInfos.LoginView, UriKind.Relative), parameters);
+            }
         }
 
         public void GoBack()

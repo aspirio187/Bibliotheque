@@ -23,7 +23,7 @@ namespace Bibliotheque.UI.ViewModels
         private readonly ILibraryRepository m_Repository;
         private readonly IUserService m_UserService;
 
-        private IRegionNavigationService m_Region;
+        private IRegionNavigationService m_Navigation;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -35,7 +35,7 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
-
+        #region Propriétés dans la vue
         private string m_Email;
 
         public string Email
@@ -59,6 +59,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_MessageErreur; }
             set { SetProperty(ref m_MessageErreur, value); }
         }
+        #endregion
 
         public string Title => throw new NotImplementedException();
 
@@ -131,14 +132,14 @@ namespace Bibliotheque.UI.ViewModels
 
         public void NavigateToRegister()
         {
-            if (m_Region == null)
-                throw new ArgumentNullException(nameof(m_Region));
-            m_Region.RequestNavigate("RegisterView");
+            if (m_Navigation == null)
+                throw new ArgumentNullException(nameof(m_Navigation));
+            m_Navigation.RequestNavigate(GlobalInfos.RegisterView);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            m_Region = navigationContext.Parameters.GetValue<IRegionNavigationService>("Region");
+            m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

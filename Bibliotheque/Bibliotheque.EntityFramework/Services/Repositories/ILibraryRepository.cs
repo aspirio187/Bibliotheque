@@ -8,6 +8,6 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
 {
     public partial interface ILibraryRepository
     {
-
+        Task<int> SaveAsync();
     }
 }

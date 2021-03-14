@@ -83,6 +83,12 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
+            if (user.Address == null)
+                throw new ArgumentNullException(nameof(user.Address));
+            user.Role = m_Context.Roles.FirstOrDefault(x => x.Name.Equals("user"));
+            if (user.Role == null)
+                throw new ArgumentNullException(nameof(user.Role));
+            user.Token = Guid.NewGuid();
             m_Context.Entry(user).State = EntityState.Added;
         }
 

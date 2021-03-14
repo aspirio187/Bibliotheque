@@ -12,26 +12,34 @@ namespace Bibliotheque.EntityFramework.Entities
     {
         // Propriétés propres
         public Guid Id { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [MaxLength(100)]
         [EmailAddress]
         public string Email { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [MaxLength(500)]
         public string Password { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
         public string FirstName { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
         public string LastName { get; set; }
+
         public DateTimeOffset BirthDate { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [StringLength(5)]
         public string Gender { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [StringLength(10)]
         public string PhoneNumber { get; set; }
+
         // Token crée lors de la création et mis à jours lors des modification
         // de mot de passe.
         [Required(AllowEmptyStrings = false)]
