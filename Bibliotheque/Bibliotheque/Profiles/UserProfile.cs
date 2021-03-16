@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.Services.Authentication;
 using Bibliotheque.UI.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Bibliotheque.UI.Profiles
         public UserProfile()
         {
             CreateMap<UserForCreationRecord, UserEntity>();
+            CreateMap<UserConnectionRecord, LoginRequest>();
         }
     }
 }

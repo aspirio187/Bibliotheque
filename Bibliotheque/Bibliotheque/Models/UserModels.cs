@@ -7,4 +7,6 @@ using System.Threading.Tasks;
 namespace Bibliotheque.UI.Models
 {
     public record UserForCreationRecord(string Email, string Password, string FirstName, string LastName, string Gender, DateTimeOffset BirthDate, AddressForCreationRecord Address);
+    public record UserConnectionRecord(string Email, string Password);
+    public record UserCurrectSessionRecord(Guid Id, string Email, Guid Token);
 }

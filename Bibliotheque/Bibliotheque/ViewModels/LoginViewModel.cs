@@ -17,13 +17,15 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class LoginViewModel : BindableBase, INavigationAware
+    public class LoginViewModel : BindableBase, INavigationAware, IJournalAware
     {
         private readonly IMapper m_Mapper;
         private readonly ILibraryRepository m_Repository;
         private readonly IUserService m_UserService;
 
         private IRegionNavigationService m_Navigation;
+
+        public bool IsRelevant { get; set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -52,16 +54,14 @@ namespace Bibliotheque.UI.ViewModels
             set { SetProperty(ref m_Password, value); }
         }
 
-        private string m_MessageErreur;
+        private string m_ErrorMessage;
 
-        public string MessageErreur
+        public string ErrorMessage
         {
-            get { return m_MessageErreur; }
-            set { SetProperty(ref m_MessageErreur, value); }
+            get { return m_ErrorMessage; }
+            set { SetProperty(ref m_ErrorMessage, value); }
         }
         #endregion
-
-        public string Title => throw new NotImplementedException();
 
         public LoginViewModel(ILibraryRepository repository, IMapper mapper, IUserService userService)
         {
@@ -76,71 +76,90 @@ namespace Bibliotheque.UI.ViewModels
             NavigateToRegisterCommand = new DelegateCommand(NavigateToRegister);
         }
 
-        public async Task<bool> LoginRequest(LoginModel login)
+        /// <summary>
+        /// "Demande" la connexion grâce aux identifiants fournis en paramètre.
+        /// </summary>
+        /// <param name="login">
+        /// Record utilisé pour que l'utilisateur puisse se connecter
+        /// </param>
+        /// <returns>
+        /// true Si la connexion est réussie. false Dans le cas contraire
+        /// </returns>
+        public async Task<bool> LoginRequest(UserConnectionRecord login)
         {
             if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Password))
             {
-                MessageErreur = "Veuillez entrer les informations dans les champs requis!";
+                ErrorMessage = "Veuillez entrer les informations dans les champs requis!";
                 return false;
             }
 
             var response = m_UserService.Login(m_Mapper.Map<LoginRequest>(login));
             if (response == null)
             {
-                MessageErreur = "Les informations de connexion sont incorrects!";
+                ErrorMessage = "Les informations de connexion sont incorrect!";
                 return false;
             }
 
             if (await m_Repository.UserIsBlackListed(response.Id))
             {
-                MessageErreur = "Vous êtes interdit dans cette bibliothèque!";
+                ErrorMessage = "Vous êtes interdit dans cette bibliothèque!";
                 return false;
             }
 
             if (!await LocalFileHelper.WriteJsonFile(GlobalInfos.UserSessionPath, response))
             {
-                MessageErreur = "Une erreur est survenue lors de la connexion";
+                ErrorMessage = "Une erreur est survenue lors de la connexion";
                 return false;
             }
 
             return true;
         }
 
+        /// <summary>
+        /// Tente d'authentifier et connecter l'utilisateur
+        /// </summary>
         public async Task Login()
         {
             if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
-                MessageErreur = "L'email et le mot de passe sont nécessaires à la connexion!";
+                ErrorMessage = "L'email et le mot de passe sont nécessaires à la connexion!";
             if (!EmailHelper.IsValidEmail(Email))
-                MessageErreur = "Le format de l'email est invalide!";
+                ErrorMessage = "Le format de l'email est invalide!";
 
-            LoginModel login = new()
-            {
-                Email = this.Email,
-                Password = this.Password
-            };
+            UserConnectionRecord login = new(Email, Password);
 
             if (await LoginRequest(login))
             {
-
                 // TODO : Renvoyer vers la dernière page visitée
+                IsRelevant = false;
+                GoBack();
             }
             else
             {
-                MessageErreur = "Le mail ou le mot de passe sont incorrect.";
+                ErrorMessage = "Une erreur est survenue lors de la connexion";
+            }
+        }
+
+        /// <summary>
+        /// Renvoi vers la page précédente
+        /// </summary>
+        private void GoBack()
+        {
+            if (m_Navigation.Journal.CanGoBack)
+            {
+                m_Navigation.Journal.GoBack();
             }
         }
 
         public void NavigateToRegister()
         {
-            if (m_Navigation == null)
-                throw new ArgumentNullException(nameof(m_Navigation));
+            if (m_Navigation == null) throw new ArgumentNullException(nameof(m_Navigation));
+            IsRelevant = true;
             m_Navigation.RequestNavigate(GlobalInfos.RegisterView);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null)
-                m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -150,6 +169,11 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+        }
+
+        public bool PersistInHistory()
+        {
+            return IsRelevant;
         }
     }
 }
