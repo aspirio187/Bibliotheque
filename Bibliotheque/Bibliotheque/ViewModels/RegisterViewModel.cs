@@ -82,7 +82,10 @@ namespace Bibliotheque.UI.ViewModels
         public ObservableCollection<ErrorRecord> ErrorsList
         {
             get { return m_ErrorsList; }
-            set { SetProperty(ref m_ErrorsList, value); }
+            set 
+            {
+                SetProperty(ref m_ErrorsList, value); 
+            }
         }
 
         /***************************************************/
