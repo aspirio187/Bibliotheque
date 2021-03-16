@@ -19,6 +19,11 @@ namespace Bibliotheque.EntityFramework.Entities
         public string Email { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        [EmailAddress]
+        public string NormalizedEmail { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
         [MaxLength(500)]
         public string Password { get; set; }
 

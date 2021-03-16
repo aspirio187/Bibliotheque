@@ -21,29 +21,39 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         void DeleteUser(UserEntity user);
     }
 
+    // TODO : Ajouter les tags d'exception dans les commentaires
+    // TODO : Déplacer UserIsBlackListed() dans BlackListedRepository
     public partial class LibraryRepository : ILibraryRepository
     {
         /// <summary>
-        /// Vérifie s'il existe un utilisateur avec l'id en paramètre
+        /// Vérifie s'il existe dans le contexte un utilisateur ayant comme ID celui 
+        /// donné en paramètre. Si l'id en paramètre est vide, le programme lance une
+        /// exception.
         /// </summary>
         /// <param name="userId">ID de l'utilisateur</param>
-        /// <returns>true Si l'utilisateur existe. false Dans le cas contraire</returns>
+        /// <returns>
+        /// true Si l'utilisateur existe. false Dans le cas contraire
+        /// </returns>
         public async Task<bool> UserExistsAsync(Guid userId)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentNullException(nameof(userId));
+            if (userId == Guid.Empty) throw new ArgumentException(nameof(userId));
             return await m_Context.Users.AnyAsync(x => x.Id == userId);
         }
 
         /// <summary>
-        /// Vérifie si le mail en paramètre existe déjà dans la base de données
+        /// Vérifie s'il existe dans le contexte, une entité UserEntity ayant déjà
+        /// l'adresse mail en paramètre
         /// </summary>
-        /// <param name="email">Chaine de caractère qui représente le mail</param>
-        /// <returns>true Si le mail existe. false Dans le cas contraire</returns>
+        /// <param name="email">
+        /// Chaine de caractère qui représente l'adresse email recherchée
+        /// </param>
+        /// <returns>
+        /// true Si le mail existe. false Dans le cas contraire
+        /// </returns>
         public async Task<bool> EmailExistsAsync(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentNullException(nameof(email));
+            if (email == null) throw new ArgumentNullException(nameof(email));
+            if (email.Equals(string.Empty)) throw new ArgumentException(nameof(email));
             return await m_Context.Users.AnyAsync(x => x.Email == email);
         }
 
@@ -55,18 +65,20 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         /// <returns>true Si l'utilisateur est blacklisté. false Dans le cas contraire</returns>
         public async Task<bool> UserIsBlackListed(Guid userId)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentNullException(nameof(userId));
+            if (userId == Guid.Empty) throw new ArgumentException(nameof(userId));
             return await m_Context.BlackListeds.AnyAsync(x => x.UserId == userId);
         }
 
         /// <summary>
-        /// Vérifie si le token de l'utilisateur défini par l'ID en paramètre
-        /// a été changé.
+        /// Vérifie si le token de l'utilisateur ayant comme ID celui donnée en paramètre
+        /// est identique à celui donnée en paramètre. Si l'ID ou le token est vide, le 
+        /// programme lance une exception
         /// </summary>
         /// <param name="userId">ID de l'utilisateur</param>
         /// <param name="token">Token a comparer</param>
-        /// <returns>true Si le token est identique. false Dans le cas contraire</returns>
+        /// <returns>
+        /// true Si le token est identique. false Dans le cas contraire
+        /// </returns>
         public async Task<bool> UserTokenHasChanged(Guid userId, Guid token)
         {
             if (userId == Guid.Empty) throw new ArgumentNullException(nameof(userId));
@@ -77,12 +89,14 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         }
 
         /// <summary>
-        /// Ajoute un utilisateur dans le contexte
+        /// Ajoute un utilisateur dans le contexte. Si l'entité UserEntity ou sa propriété
+        /// AddressEntity sont null ou si le role USER est introuvable, le programme lance 
+        /// une exception
         /// </summary>
         /// <param name="user">Entité User à ajouter</param>
         public void AddUser(UserEntity user)
         {
-            // Vérifie si l'entitée utilisateur en paramètre est null
+            // Vérifie si l'entité utilisateur en paramètre est null
             if (user == null) throw new ArgumentNullException(nameof(user));
             // Vérifie si l'adresse de l'utilsateur en paramètre n'est pas null
             if (user.Address == null) throw new ArgumentNullException(nameof(user.Address));
@@ -97,34 +111,40 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         }
 
         /// <summary>
-        /// Retourne la liste de tous les utilisateurs dans le contexte
+        /// Retourne la liste de toutes les entités UserEntity dans le contexte
         /// </summary>
-        /// <returns>IEnumerable des entités User</returns>
+        /// <returns>
+        /// IEnumerable des entités UserEntity
+        /// </returns>
         public async Task<IEnumerable<UserEntity>> GetUsersAsync()
         {
             return await m_Context.Users.ToListAsync();
         }
 
         /// <summary>
-        /// Retourne l'utilisateur choisi par son ID dans le contexte
+        /// Retourne une entité UserEntity du contexte dont la propriété ID est égale à l'id 
+        /// en paramètre
         /// </summary>
-        /// <param name="userId">ID de l'utilisateur</param>
-        /// <returns>Une entité User</returns>
+        /// <param name="userId">ID de l'entité recherchée</param>
+        /// <returns>
+        /// L'entité UserEntity recherchée
+        /// </returns>
         public async Task<UserEntity> GetUserAsync(Guid userId)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentNullException(nameof(userId));
+            if (userId == Guid.Empty) throw new ArgumentException(nameof(userId));
             return await m_Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
         }
 
         /// <summary>
-        /// Supprime l'entité User en paramètre du contexte
+        /// Supprime l'entité UserEntity du contexte
         /// </summary>
-        /// <param name="user">Entité User</param>
+        /// <param name="user">Entitée UserEntity à supprimer</param>
+        /// <exception cref="ArgumentNullException">
+        /// Lancée si l'entité UserEntity en paramètre est null
+        /// </exception>
         public void DeleteUser(UserEntity user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            if (user == null) throw new ArgumentNullException(nameof(user));
             m_Context.Users.Remove(user);
         }
     }

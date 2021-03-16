@@ -10,6 +10,7 @@ namespace Bibliotheque.EntityFramework.Entities
     public class CategoryEntity
     {
         public int Id { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         [MaxLength(30)]
         public string Name { get; set; }

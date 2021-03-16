@@ -12,5 +12,6 @@ namespace Bibliotheque.EntityFramework.Entities
         public Guid Id { get; set; }
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
+        public string NormalizedName { get; set; }
     }
 }
