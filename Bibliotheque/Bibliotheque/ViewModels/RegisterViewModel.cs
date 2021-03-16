@@ -180,12 +180,12 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_FirstName; }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.FirstName, "Veuillez fournir le prénom!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.FirstName);
 
-                SetProperty(ref m_FirstName, value.FirstCharToUpper());
+                SetProperty(ref m_FirstName, value.Trim().ToLower().FirstCharToUpper());
             }
         }
 
@@ -196,11 +196,11 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_LastName; }
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.LastName, "Veuillez fournir le nom de famille!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.LastName);
-                SetProperty(ref m_LastName, value.Trim().FirstCharToUpper());
+                SetProperty(ref m_LastName, value.Trim().ToLower().FirstCharToUpper());
             }
         }
 
@@ -240,12 +240,12 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_Street; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrEmpty(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.Street, "Veuillez fournir la rue et le numéro");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.Street);
 
-                SetProperty(ref m_Street, value);
+                SetProperty(ref m_Street, value.Trim().ToLower());
             }
         }
 
@@ -256,9 +256,9 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_Appartment; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrEmpty(value.Trim()))
                     value = string.Empty;
-                SetProperty(ref m_Appartment, value);
+                SetProperty(ref m_Appartment, value.Trim().ToLower());
             }
         }
 
@@ -270,7 +270,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_ZipCode; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.ZipCode, "Veuillez fournir le code postal!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.ZipCode);
@@ -280,7 +280,7 @@ namespace Bibliotheque.UI.ViewModels
                 else
                     ClearError(RegisterErrors.InvalidZipCode, Properties.ZipCode);
 
-                SetProperty(ref m_ZipCode, value);
+                SetProperty(ref m_ZipCode, value.Trim().ToLower());
             }
         }
 
@@ -291,12 +291,12 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_City; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.City, "Veuillez fournir la ville!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.City);
 
-                SetProperty(ref m_City, value);
+                SetProperty(ref m_City, value.Trim().ToLower());
             }
         }
 
@@ -307,7 +307,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_PhoneNumber; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value.Trim()))
                     RaiseError(RegisterErrors.InvalidField, Properties.PhoneNumber, "Veuillez fournir le numéro de téléphone!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.PhoneNumber);
@@ -317,7 +317,7 @@ namespace Bibliotheque.UI.ViewModels
                 else
                     ClearError(RegisterErrors.InvalidPhone, Properties.PhoneNumber);
 
-                SetProperty(ref m_PhoneNumber, value);
+                SetProperty(ref m_PhoneNumber, value.Trim().ToLower());
             }
         }
         #endregion
@@ -341,28 +341,11 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (CanRegister())
             {
-                AddressModel address = new()
-                {
-                    Street = Street,
-                    Appartment = Appartment,
-                    ZipCode = ZipCode,
-                    City = City
-                };
+                AddressForCreationRecord address = new(Street, Appartment, ZipCode, City);
 
-                RegisterModel register = new()
-                {
-                    Email = Email,
-                    Password = Password,
-                    PasswordConfirmation = PasswordConfirmation,
-                    FirstName = FirstName,
-                    LastName = LastName,
-                    Gender = Gender,
-                    BirthDate = BirthDate,
-                    PhoneNumber = PhoneNumber,
-                    Address = address
-                };
+                UserForCreationRecord userForCreation = new(Email, Password, FirstName, LastName, Gender, BirthDate, address);
 
-                var user = m_Mapper.Map<UserEntity>(register);
+                var user = m_Mapper.Map<UserEntity>(userForCreation);
                 m_Repository.AddUser(user);
                 await m_Repository.SaveAsync();
                 GoBack();

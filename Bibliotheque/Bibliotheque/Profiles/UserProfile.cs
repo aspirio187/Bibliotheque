@@ -13,7 +13,7 @@ namespace Bibliotheque.UI.Profiles
     {
         public UserProfile()
         {
-            CreateMap<RegisterModel, UserEntity>();
+            CreateMap<UserForCreationRecord, UserEntity>();
         }
     }
 }

@@ -13,7 +13,18 @@ namespace Bibliotheque.UI.Profiles
     {
         public AddressProfile()
         {
-            CreateMap<AddressModel, AddressEntity>();
+            CreateMap<AddressEntity, AddressRecord>()
+                .ForMember(
+                    dest => dest.FullAddress,
+                    opt => opt.MapFrom(src =>
+                        string.IsNullOrEmpty(src.Appartment) ? $"{src.Street}" : $"{src.Street} - {src.Appartment}"))
+                .ForMember(
+                    dest => dest.FullCity,
+                    opt => opt.MapFrom(src =>
+                        $"{src.ZipCode} - {src.City}"));
+
+            CreateMap<AddressForCreationRecord, AddressEntity>();
+            CreateMap<AddressForUpdateRecord, AddressEntity>();
         }
     }
 }
