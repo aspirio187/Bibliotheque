@@ -25,25 +25,22 @@
                 <Button Content="B" Width="30" Height="30"
                         Command="{Binding GoBackCommand}" />
             </DockPanel>
-            <DockPanel HorizontalAlignment="Left" >
-                <Button Content="E" Width="30" Height="30" />
-                <Button Content="C" Width="30" Height="30" />
-            </DockPanel>
             <DockPanel HorizontalAlignment="Left">
                 <Button x:Name="Profile" Content="P" Width="30" Height="30"
                         Command="{Binding NavigateToProfileCommand}" />
             </DockPanel>
 
             <DockPanel HorizontalAlignment="Left" >
-                <Button Content="Accueil" />
-                <Button Content="Livres" />
+                <Button Content="Accueil" Width="150"/>
+                <Button Content="Livres" Width="150"/>
+                <Button Content="Administration" Width="150"/>
             </DockPanel>
 
             <DockPanel HorizontalAlignment="Right">
                 <Button Height="30" Width="30"      
-                    Name="MinimizeButton" />
+                    x:Name="MinimizeButton" />
                 <Button Height="30" Width="30"
-                    Name="ExitButton" />
+                    x:Name="ExitButton" />
             </DockPanel>
         </DockPanel>
 

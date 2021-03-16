@@ -20,7 +20,7 @@ namespace Bibliotheque.UI.Helpers
 
         public static async Task<T> ReadJsonFile<T>(string path)
         {
-            return JsonConvert.DeserializeObject<T>(await File.ReadAllTextAsync(path)));
+            return JsonConvert.DeserializeObject<T>(await File.ReadAllTextAsync(path));
         }
     }
 }
