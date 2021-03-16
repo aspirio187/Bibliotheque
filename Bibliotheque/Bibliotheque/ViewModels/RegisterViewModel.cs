@@ -180,7 +180,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_FirstName; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrEmpty(value))
                     RaiseError(RegisterErrors.InvalidField, Properties.FirstName, "Veuillez fournir le prénom!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.FirstName);
@@ -196,7 +196,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_LastName; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrEmpty(value))
                     RaiseError(RegisterErrors.InvalidField, Properties.LastName, "Veuillez fournir le nom de famille!");
                 else
                     ClearError(RegisterErrors.InvalidField, Properties.LastName);

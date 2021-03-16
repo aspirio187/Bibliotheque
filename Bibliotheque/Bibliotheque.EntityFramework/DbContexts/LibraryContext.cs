@@ -13,6 +13,7 @@ namespace Bibliotheque.EntityFramework.DbContexts
         #region Tous les DbSet
         public DbSet<AddressEntity> Addresses { get; set; }
         public DbSet<BlackListedEntity> BlackListeds { get; set; }
+        public DbSet<BookCopyEntity> BookCopies { get; set; }
         public DbSet<BookEntity> Books { get; set; }
         public DbSet<BorrowEntity> Borrows { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
