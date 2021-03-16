@@ -26,39 +26,50 @@
                                  helper:PasswordBoxHelper.Password="{Binding Password, Mode=TwoWay}" />
                     <!-- Password Confirmation -->
                     <TextBlock Text="Confirmer le mot de passe :" Margin="0 5" />
-                    <PasswordBox x:Name="PasswordConfirmationBox" PasswordChar="*" Width="200" />
+                    <PasswordBox x:Name="PasswordConfirmationBox" PasswordChar="*" Width="200" 
+                                 helper:PasswordBoxHelper.Attach="True"
+                                 helper:PasswordBoxHelper.Password="{Binding PasswordConfirmation, Mode=TwoWay}" />
                 </StackPanel>
                 <StackPanel Margin="5" >
+                    <!-- FirstName -->
                     <TextBlock Text="Prénom :" Margin="0 5" />
-                    <TextBox x:Name="FirstNameBox" Width="200" />
+                    <TextBox x:Name="FirstNameBox" Text="{Binding FirstName}" Width="200" />
+                    <!-- LastName -->
                     <TextBlock Text="Nom :" Margin="0 5" />
-                    <TextBox x:Name="LastNameBox" Width="200" />
+                    <TextBox x:Name="LastNameBox" Text="{Binding LastName}" Width="200" />
+                    <!-- Gender -->
                     <TextBlock Text="Sex :" Margin="0 5" />
-                    <ComboBox x:Name="cmbGender" SelectedIndex="0" >
+                    <ComboBox x:Name="cmbGender" SelectedIndex="0" SelectedItem="{Binding Gender}">
                         <ComboBoxItem Content="Homme" />
                         <ComboBoxItem Content="Femme" />
                     </ComboBox>
+                    <!-- Birthdate -->
                     <TextBlock Text="Date de naissance :" Margin="0 5" />
-                    <DatePicker x:Name="DateBox" />
+                    <DatePicker x:Name="DateBox" SelectedDate="{Binding BirthDate}"/>
                 </StackPanel>
                 <StackPanel Margin="5" >
+                    <!-- Street and house number -->
                     <TextBlock Text="Rue et numéro :" Margin="0 5" />
-                    <TextBox x:Name="StreetBox" Text="Avenue Louise 145" Width="200" />
+                    <TextBox x:Name="StreetBox" Text="{Binding Street}" Width="200" />
+                    <!-- Appartment number-->
                     <TextBlock Text="Appartement" Margin="0 5" />
-                    <TextBox x:Name="AppartmentBox" Width="200" />
+                    <TextBox x:Name="AppartmentBox" Text="{Binding Appartment}" Width="200" />
+                    <!-- ZipCode -->
                     <TextBlock Text="Code postal :" Margin="0 5" />
-                    <TextBox x:Name="ZipCodeBox" Text="1000" Width="200" />
+                    <TextBox x:Name="ZipCodeBox" Text="{Binding ZipCode}" Width="200" />
+                    <!-- City -->
                     <TextBlock Text="Ville" Margin="0 5"/>
-                    <TextBox x:Name="CityBox" Width="200" />
+                    <TextBox x:Name="CityBox" Text="{Binding City}" Width="200" />
+                    <!-- Phone number -->
                     <TextBlock Text="Numero de téléphone :" Margin="0 5" />
-                    <TextBox x:Name="PhoneBox" Width="200" />
+                    <TextBox x:Name="PhoneBox" Text="{Binding PhoneNumber}" Width="200" />
                 </StackPanel>
             </DockPanel>
             <Label Content="Tous les champs doivent être remplis (excepté l'appartement)" FontWeight="Bold" HorizontalContentAlignment="Left" />
             <ItemsControl ItemsSource="{Binding ErrorsList}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding ErrorMessage}" Background="LightBlue"/>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

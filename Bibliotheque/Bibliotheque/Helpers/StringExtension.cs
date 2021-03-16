@@ -10,7 +10,7 @@ namespace Bibliotheque.UI.Helpers
     {
         public static string FirstCharToUpper(this string input) => input switch
         {
-            null or "" => throw new ArgumentNullException(nameof(input)),
+            null or "" => string.Empty,
             _ => input.Trim().First().ToString().ToUpper() + input.Substring(1).Trim(),
         };
     }

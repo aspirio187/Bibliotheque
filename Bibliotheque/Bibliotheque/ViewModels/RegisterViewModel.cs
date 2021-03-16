@@ -82,9 +82,9 @@ namespace Bibliotheque.UI.ViewModels
         public ObservableCollection<ErrorRecord> ErrorsList
         {
             get { return m_ErrorsList; }
-            set 
+            set
             {
-                SetProperty(ref m_ErrorsList, value); 
+                SetProperty(ref m_ErrorsList, value);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_Email; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value) || !EmailHelper.IsValidEmail(value))
+                if (!EmailIsValid(value))
                     RaiseError(RegisterErrors.InvalidEmail, Properties.Email, "L'addresse email entrée n'est pas valide!");
                 else
                     ClearError(RegisterErrors.InvalidEmail, Properties.Email);
@@ -116,7 +116,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_EmailConfirmation; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value) || !EmailHelper.IsValidEmail(value))
+                if (!EmailIsValid(value))
                     RaiseError(RegisterErrors.InvalidEmailConfirmation, Properties.EmailConfirmation, "L'adresse email de confirmation n'est pas valide");
                 else
                     ClearError(RegisterErrors.InvalidEmailConfirmation, Properties.EmailConfirmation);
@@ -137,7 +137,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_Password; }
             set
             {
-                if (!Regex.IsMatch(value, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,25}$"))
+                if (!PasswordIsValid(value))
                     RaiseError(RegisterErrors.InvalidePassword,
                         Properties.Password,
                         "Le mot de passe doit faire entre 8 et 25 caractères et contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial");
@@ -155,7 +155,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_PasswordConfirmation; }
             set
             {
-                if (!Regex.IsMatch(value, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,25}$"))
+                if (PasswordIsValid(value))
                     RaiseError(RegisterErrors.InvalidPasswordConfirmation,
                         Properties.PasswordConfirmation,
                         "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial");
@@ -320,19 +320,6 @@ namespace Bibliotheque.UI.ViewModels
                 SetProperty(ref m_PhoneNumber, value);
             }
         }
-
-
-        private bool m_CanRegister;
-
-        public bool CanRegister
-        {
-            get { return m_CanRegister; }
-            set
-            {
-                SetProperty(ref m_CanRegister, value);
-                RegisterCommand.RaiseCanExecuteChanged();
-            }
-        }
         #endregion
 
         public RegisterViewModel(ILibraryRepository repository, IMapper mapper)
@@ -352,31 +339,34 @@ namespace Bibliotheque.UI.ViewModels
         /// </summary>
         public async Task Register()
         {
-            AddressModel address = new()
+            if (CanRegister())
             {
-                Street = Street,
-                Appartment = Appartment,
-                ZipCode = ZipCode,
-                City = City
-            };
+                AddressModel address = new()
+                {
+                    Street = Street,
+                    Appartment = Appartment,
+                    ZipCode = ZipCode,
+                    City = City
+                };
 
-            RegisterModel register = new()
-            {
-                Email = Email,
-                Password = Password,
-                PasswordConfirmation = PasswordConfirmation,
-                FirstName = FirstName,
-                LastName = LastName,
-                Gender = Gender,
-                BirthDate = BirthDate,
-                PhoneNumber = PhoneNumber,
-                Address = address
-            };
+                RegisterModel register = new()
+                {
+                    Email = Email,
+                    Password = Password,
+                    PasswordConfirmation = PasswordConfirmation,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Gender = Gender,
+                    BirthDate = BirthDate,
+                    PhoneNumber = PhoneNumber,
+                    Address = address
+                };
 
-            var user = m_Mapper.Map<UserEntity>(register);
-            m_Repository.AddUser(user);
-            await m_Repository.SaveAsync();
-            GoBack();
+                var user = m_Mapper.Map<UserEntity>(register);
+                m_Repository.AddUser(user);
+                await m_Repository.SaveAsync();
+                GoBack();
+            }
         }
 
         /// <summary>
@@ -402,7 +392,6 @@ namespace Bibliotheque.UI.ViewModels
                     ErrorsList.Insert(i, newError);
                 }
             }
-            CanRegister = false;
         }
 
         /// <summary>
@@ -418,7 +407,71 @@ namespace Bibliotheque.UI.ViewModels
             {
                 ErrorsList.Remove(error);
             }
-            CanRegister = true;
+        }
+
+        /// <summary>
+        /// Vérifie bien si tous les champs requis à l'enregistrement d'un nouvel utilisateur
+        /// ne sont pas vide.
+        /// </summary>
+        /// <returns>
+        /// true Si tous les champs contienent au moins 1 caractère. false Dans le cas contraire
+        /// </returns>
+        public bool AllFieldsAreFull()
+        {
+            return !string.IsNullOrEmpty(Email) &&
+                !string.IsNullOrEmpty(EmailConfirmation) &&
+                !string.IsNullOrEmpty(Password) &&
+                !string.IsNullOrEmpty(PasswordConfirmation) &&
+                !string.IsNullOrEmpty(FirstName) &&
+                !string.IsNullOrEmpty(LastName) &&
+                !string.IsNullOrEmpty(Gender) &&
+                !string.IsNullOrEmpty(Street) &&
+                !string.IsNullOrEmpty(ZipCode) &&
+                !string.IsNullOrEmpty(City) &&
+                !string.IsNullOrEmpty(PhoneNumber);
+        }
+
+        /// <summary>
+        /// Vérifie grâce aux expressions régulières si le mot de passes contient bien une lettre
+        /// minuscule, une lettre majuscule, un chiffre et un caractère spécial.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns>
+        /// true Si le mot de passe répond bien aux conditions énumérées dans le résumé. false dans
+        /// le cas contraire
+        /// </returns>
+        public bool PasswordIsValid(string password)
+        {
+            return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,25}$");
+        }
+
+        /// <summary>
+        /// Vérification supplémentaire sur le mail pour bien vérifier que le champs n'est pas 
+        /// vide et que l'email est valide.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>
+        /// true Si le mail est valide. false Dans le cas contraire
+        /// </returns>
+        public bool EmailIsValid(string email)
+        {
+            return !string.IsNullOrEmpty(email) || EmailHelper.IsValidEmail(email);
+        }
+
+        /// <summary>
+        /// Vérifie si toutes les conditions à l'enregistrement d'un nouveau compte sont correctes 
+        /// (Emails valides et identiques, mot de passes valides et identiques, tous les champs 
+        /// (excepté l'appartement) sont remplis, l'utilisateur est agé de 12 ans ou plus)
+        /// </summary>
+        /// <returns>
+        /// true Si les conditions énumérées sont remplis. false dans le case contraire
+        /// </returns>
+        public bool CanRegister()
+        {
+            return EmailIsValid(Email) && EmailIsValid(EmailConfirmation) && Email.Equals(EmailConfirmation) &&
+                PasswordIsValid(Password) && PasswordIsValid(PasswordConfirmation) && Password.Equals(PasswordConfirmation) &&
+                AllFieldsAreFull() &&
+                ((DateTimeOffset.Now.Year - BirthDate.Year) > 12);
         }
 
         /// <summary>
@@ -432,6 +485,9 @@ namespace Bibliotheque.UI.ViewModels
         /// </returns>
         public PropertyInfo GetPropertyInfo(Properties property) => GetType().GetProperty(property.ToString());
 
+        /// <summary>
+        /// Fait naviguer le programme à la page précédente
+        /// </summary>
         public void GoBack()
         {
             if (m_Navigation.Journal.CanGoBack)
