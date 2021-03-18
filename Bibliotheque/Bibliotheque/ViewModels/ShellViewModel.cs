@@ -26,7 +26,7 @@ namespace Bibliotheque.UI.ViewModels
         /**************** Propriétés objets ****************/
         /***************************************************/
 
-        public CurrentSessionModel CurrentSession { get; set; }
+        public UserCurrectSessionRecord CurrentSession { get; set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -69,7 +69,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (File.Exists(GlobalInfos.UserSessionPath))
             {
-                CurrentSession = await LocalFileHelper.ReadJsonFile<CurrentSessionModel>(GlobalInfos.UserSessionPath);
+                CurrentSession = await LocalFileHelper.ReadJsonFile<UserCurrectSessionRecord>(GlobalInfos.UserSessionPath);
                 if (CurrentSession != null)
                 {
                     if (!await m_Repository.UserTokenHasChanged(CurrentSession.Id, CurrentSession.Token))
