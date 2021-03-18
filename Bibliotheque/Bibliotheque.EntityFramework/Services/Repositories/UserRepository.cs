@@ -86,7 +86,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             if (token == Guid.Empty) throw new ArgumentNullException(nameof(token));
             var user = await m_Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null) throw new ArgumentNullException(nameof(user));
-            return user.Token.Equals(token);
+            return !user.Token.Equals(token);
         }
 
         /// <summary>

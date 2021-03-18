@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
 using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -14,14 +15,14 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class ProfileInformationsViewModel : BindableBase, IJournalAware
+    public class ProfileInformationsViewModel : BindableBase, INavigationAware, IJournalAware
     {
         private readonly ILibraryRepository m_Repository;
         private readonly IMapper m_Mapper;
 
         private IRegionNavigationService m_Navigation;
 
-        private UserCurrectSessionRecord m_CurrectSession;
+        private UserCurrentSessionRecord m_CurrectSession;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -111,8 +112,9 @@ namespace Bibliotheque.UI.ViewModels
             m_Mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
 
-            // Chargement des informations
-            Task.Run(LoadData);
+            GendersCollection = new(GendersData.GetGenders());
+
+            ModifyCommand = new(async () => await Modify());
         }
 
         /// <summary>
@@ -121,19 +123,37 @@ namespace Bibliotheque.UI.ViewModels
         public async Task LoadData()
         {
             User = m_Mapper.Map<UserForUpdateModel>(await m_Repository.GetUserAsync(m_CurrectSession.Id));
-            Gender = GendersCollection.FirstOrDefault(x => x.Name.Equals(User.Gender));
+            Gender = GendersCollection.FirstOrDefault(x => x.Name.Equals(User.Gender.Name));
         }
 
         public async Task Modify()
         {
+            User.Gender = new GenderRecord(Gender.Name);
             var userToUpdate = await m_Repository.GetUserAsync(User.Id);
-            userToUpdate = m_Mapper.Map<UserEntity>(User);
+            m_Mapper.Map(User, userToUpdate);
             await m_Repository.SaveAsync();
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (m_CurrectSession == null) m_CurrectSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
+            Task.Run(LoadData);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
         }
 
         public bool PersistInHistory()
         {
             return false;
         }
+
     }
 }

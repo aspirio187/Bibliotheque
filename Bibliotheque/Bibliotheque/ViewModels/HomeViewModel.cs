@@ -29,7 +29,7 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
-        
+
 
         public HomeViewModel(ILibraryRepository repository, IMapper mapper)
         {
@@ -41,12 +41,12 @@ namespace Bibliotheque.UI.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

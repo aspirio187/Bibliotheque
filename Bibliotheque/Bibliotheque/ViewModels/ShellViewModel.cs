@@ -1,4 +1,5 @@
 ﻿using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
@@ -26,7 +27,7 @@ namespace Bibliotheque.UI.ViewModels
         /**************** Propriétés objets ****************/
         /***************************************************/
 
-        public UserCurrectSessionRecord CurrentSession { get; set; }
+        public UserCurrentSessionRecord CurrentSession { get; set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -86,7 +87,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (File.Exists(GlobalInfos.UserSessionPath))
             {
-                CurrentSession = await LocalFileHelper.ReadJsonFile<UserCurrectSessionRecord>(GlobalInfos.UserSessionPath);
+                CurrentSession = await LocalFileHelper.ReadJsonFile<UserCurrentSessionRecord>(GlobalInfos.UserSessionPath);
                 if (CurrentSession != null)
                 {
                     if (!await m_Repository.UserTokenHasChanged(CurrentSession.Id, CurrentSession.Token))
@@ -111,7 +112,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (IsConnected)
             {
-                // TODO : Navigate to profile page
+                Navigate(ViewsEnum.ProfileView);
             }
             else
             {
@@ -138,7 +139,8 @@ namespace Bibliotheque.UI.ViewModels
             NavigationParameters navigationParameters = new()
             {
                 { GlobalInfos.NavigationServiceName, m_NavigationService },
-                { GlobalInfos.ConnectionName, IsConnected }
+                { GlobalInfos.ConnectionName, IsConnected },
+                { NavParameters.CurrentSessionParam, CurrentSession }
             };
 
             if (navigationParams != null)

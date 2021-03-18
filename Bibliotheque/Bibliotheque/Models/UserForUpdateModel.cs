@@ -14,6 +14,6 @@ namespace Bibliotheque.UI.Models
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
         public GenderRecord Gender { get; set; }
-        public DateTime DateBirth { get; set; }
+        public DateTime BirthDate { get; set; }
     }
 }

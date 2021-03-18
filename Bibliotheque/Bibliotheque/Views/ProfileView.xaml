@@ -16,10 +16,10 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
-            <Button Content="Informations" Command="{Binding NavigateToInformationCommand}"/>
+            <Button Content="Informations" Command="{Binding NavigateToInformationsCommand}"/>
             <Button Content="Adresse" Command="{Binding NavigateToAddressCommand}"/>
             <Button Content="Mot de passe" Command="{Binding NavigateToPasswordCommand}"/>
-            <Button Content="Emprunts" Command="{Binding NavigateToBorrowCommand}"/>
+            <Button Content="Emprunts" Command="{Binding NavigateToBorrowsCommand}"/>
             <Button Content="Historique" Command="{Binding NavigateToHistoryCommand}"/>
         </StackPanel>
 

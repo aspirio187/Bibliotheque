@@ -23,5 +23,6 @@ namespace Bibliotheque.UI.Helpers
         HomeView,
         LoginView,
         RegisterView,
+        ProfileView
     }
 }
