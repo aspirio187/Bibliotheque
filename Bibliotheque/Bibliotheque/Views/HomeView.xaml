@@ -5,8 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bibliotheque.UI.Views"
         mc:Ignorable="d"
-        Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Height="1000" Width="1000">
+    <ScrollViewer>
+        <Grid Background="White">
+            <Grid.ColumnDefinitions>
+
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0">
+                <Border Width="200" Height="auto" BorderBrush="blue" BorderThickness="5" >
+                    <StackPanel>
+                        <Image Source="/Views/le throne de fer.jpg" Width="200" Height="250"/>
+                        <TextBlock Text="TITRE" Margin="5"/>
+                        <Button Content="Détails" Margin="5"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1">
+                <Border Width="200" Height="auto" BorderBrush="blue" BorderThickness="5" >
+                    <StackPanel>
+                        <Image Source="/Views/le throne de fer.jpg" Width="200" Height="250"/>
+                        <TextBlock Text="TITRE" Margin="5"/>
+                        <Button Content="Détails" Margin="5"/>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+        </Grid>
+    </ScrollViewer>
 </ContentControl>

@@ -46,8 +46,8 @@
 
         <ContentControl Grid.Column="1"
                         Grid.Row="1"
-                        prism:RegionManager.RegionName="CustomView" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center" />
+                        prism:RegionManager.RegionName="MainRegion" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch" />
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.UI.Helpers;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
