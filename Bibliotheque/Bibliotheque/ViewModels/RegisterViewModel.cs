@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.Helpers;
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
@@ -10,6 +11,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -34,7 +36,9 @@ namespace Bibliotheque.UI.ViewModels
         InvalidDate,
         AgeMinimum,
         InvalidZipCode,
-        InvalidPhone
+        InvalidPhone,
+        AddressCreation,
+        UserCreation
     }
 
     /// <summary>
@@ -354,11 +358,20 @@ namespace Bibliotheque.UI.ViewModels
             if (CanRegister())
             {
                 AddressForCreationRecord address = new(Street, Appartment, ZipCode, City);
-
-                UserForCreationRecord userForCreation = new(Email, Password, FirstName, LastName, Gender, BirthDate, address);
-
-                var user = m_Mapper.Map<UserEntity>(userForCreation);
-                m_Repository.AddUser(user);
+                var addressToCreate = m_Mapper.Map<AddressEntity>(address);
+                if (addressToCreate == null)
+                {
+                    ErrorClaim.RaiseError("Address couldn't be mapped", address, addressToCreate);
+                    return;
+                }
+                UserForCreationRecord user = new(Email, Password, FirstName, LastName, PhoneNumber, Gender, BirthDate, address);
+                var userToCreate = m_Mapper.Map<UserEntity>(user);
+                if (user == null)
+                {
+                    ErrorClaim.RaiseError("User couldn't be mapped", user, userToCreate);
+                    return;
+                }
+                m_Repository.AddUser(userToCreate);
                 await m_Repository.SaveAsync();
                 GoBack();
             }
@@ -503,7 +516,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>("Region");
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
         }
 
         public bool PersistInHistory()

@@ -133,10 +133,6 @@ namespace Bibliotheque.UI.ViewModels
                 IsRelevant = false;
                 GoBack();
             }
-            else
-            {
-                ErrorMessage = "Une erreur est survenue lors de la connexion";
-            }
         }
 
         /// <summary>
@@ -154,7 +150,9 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (m_Navigation == null) throw new ArgumentNullException(nameof(m_Navigation));
             IsRelevant = true;
-            m_Navigation.RequestNavigate(GlobalInfos.RegisterView);
+            var parameters = new NavigationParameters();
+            parameters.Add(GlobalInfos.NavigationServiceName, m_Navigation);
+            m_Navigation.RequestNavigate(new Uri(GlobalInfos.RegisterView, UriKind.Relative), parameters);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -173,7 +171,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public bool PersistInHistory()
         {
-            return IsRelevant;
+            return true;
         }
     }
 }

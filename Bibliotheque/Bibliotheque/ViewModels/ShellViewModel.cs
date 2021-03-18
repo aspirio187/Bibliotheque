@@ -20,7 +20,7 @@ namespace Bibliotheque.UI.ViewModels
         private readonly IRegionNavigationService m_NavigationService;
         private readonly ILibraryRepository m_Repository;
 
-        private readonly string RegionName = "CustomView";
+        private readonly string RegionName = "MainRegion";
 
         /***************************************************/
         /**************** Propriétés objets ****************/
@@ -54,6 +54,7 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(regionManager));
             m_NavigationService = navigationService ??
                 throw new ArgumentNullException(nameof(navigationService));
+            m_NavigationService.Region = m_RegionManager.Regions[RegionName];
             m_Repository = repository ??
                 throw new ArgumentNullException(nameof(repository));
 
@@ -88,9 +89,7 @@ namespace Bibliotheque.UI.ViewModels
             }
             else
             {
-                IRegion mainRegion = m_RegionManager.Regions[RegionName];
                 var parameters = new NavigationParameters();
-                m_NavigationService.Region = mainRegion;
                 parameters.Add(GlobalInfos.NavigationServiceName, m_NavigationService);
                 m_NavigationService.RequestNavigate(new Uri(GlobalInfos.LoginView, UriKind.Relative), parameters);
             }

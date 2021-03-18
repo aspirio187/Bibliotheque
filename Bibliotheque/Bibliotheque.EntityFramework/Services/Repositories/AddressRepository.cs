@@ -13,6 +13,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> AddressExists(Guid addressID);
         Task<IEnumerable<AddressEntity>> GetAddresses();
         Task<AddressEntity> GetAddress(Guid addressId);
+        void AddAddress(AddressEntity address);
     }
 
     // TODO : Commenter le code
@@ -31,6 +32,12 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         public async Task<AddressEntity> GetAddress(Guid addressId)
         {
             return await m_Context.Addresses.FirstOrDefaultAsync(x => x.Id == addressId);
+        }
+
+        public void AddAddress(AddressEntity address)
+        {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            m_Context.Entry(address).State = EntityState.Added;
         }
     }
 }

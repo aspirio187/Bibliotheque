@@ -25,7 +25,7 @@ namespace Bibliotheque.EntityFramework.Services.Authentication
             if (user == null)
                 return null;
 
-            var passwordHash = HashingHelper.HashUsingPbkdf2(user.Password, user.Email);
+            var passwordHash = HashingHelper.HashUsingPbkdf2(loginRequest.Password, loginRequest.Email);
 
             if (user.Password != passwordHash)
                 return null;

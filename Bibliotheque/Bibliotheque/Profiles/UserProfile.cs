@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.Helpers;
 using Bibliotheque.EntityFramework.Services.Authentication;
 using Bibliotheque.UI.Models;
 using System;
@@ -15,6 +16,13 @@ namespace Bibliotheque.UI.Profiles
         public UserProfile()
         {
             CreateMap<UserForCreationRecord, UserEntity>()
+                .ForMember(
+                    dest => dest.NormalizedEmail,
+                    opt => opt.MapFrom(src => src.Email.ToUpper()))
+                .ForMember(
+                    dest => dest.Password,
+                    opt => opt.MapFrom(
+                        src => HashingHelper.HashUsingPbkdf2(src.Password, src.Email)))
                 .ForMember(
                     dest => dest.BirthDate,
                     opt => opt.MapFrom(src => src.BirthDate));

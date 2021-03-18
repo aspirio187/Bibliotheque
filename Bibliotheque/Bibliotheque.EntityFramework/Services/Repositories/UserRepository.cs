@@ -1,4 +1,5 @@
 ﻿using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.Helpers;
 using Bibliotheque.EntityFramework.StaticData;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -98,12 +99,18 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         {
             // Vérifie si l'entité utilisateur en paramètre est null
             if (user == null) throw new ArgumentNullException(nameof(user));
-            // Vérifie si l'adresse de l'utilsateur en paramètre n'est pas null
+            // Vérifie si l'entité addresse de l'entité utilisateur en paramètre est null
             if (user.Address == null) throw new ArgumentNullException(nameof(user.Address));
+            // Crée un ID à l'adresse
+            user.Address.Id = Guid.NewGuid();
+            // Ajoute l'adresse au contexte
+            m_Context.Entry(user.Address).State = EntityState.Added;
             // Récupère le role utilisateur pour le nouvel utilisateur
             user.Role = m_Context.Roles.FirstOrDefault(x => x.Name.Equals(RoleData.GetRole(RolesEnum.User)));
             // Vérifie si le role est null
             if (user.Role == null) throw new ArgumentNullException(nameof(user.Role));
+            // Crée un ID à l'utilisateur
+            user.Id = Guid.NewGuid();
             // Crée un nouveau Token pour l'utilisateur
             user.Token = Guid.NewGuid();
             // Ajoute l'utilisateur au contexte
