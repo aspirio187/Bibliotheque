@@ -33,6 +33,7 @@ namespace Bibliotheque
             // Déclaration des vues dans la navigation
             containerRegistry.RegisterForNavigation<LoginView>();
             containerRegistry.RegisterForNavigation<RegisterView>();
+            containerRegistry.RegisterForNavigation<HomeView>();
         }
 
         private IMapper InitAutoMapper()

@@ -27,7 +27,17 @@ namespace Bibliotheque.UI.Views
         private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
+                DragMove();
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void ContentControl_Initialized(object sender, EventArgs e)
+        {
+
         }
     }
 }

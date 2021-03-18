@@ -31,7 +31,7 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
-
+        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand GoBackCommand { get; set; }
         public DelegateCommand NavigateToProfileCommand { get; set; }
         public DelegateCommand NavigateToHomeCommand { get; set; }
@@ -64,6 +64,8 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(repository));
 
             // Initialisation des commandes
+            LoadCommand = new(Load);
+            NavigateToHomeCommand = new(NavigateToHome);
             GoBackCommand = new(GoBack);
             NavigateToProfileCommand = new(NavigateToProfile);
 
@@ -71,11 +73,6 @@ namespace Bibliotheque.UI.ViewModels
 
             // Vérifie si l'utilisateur a déjà une session en cours
             Task.Run(UserIsConnected);
-
-            // TODO : Regrouper ces instructions de navigation dans une méthode avec comme parameter ViewsEnum
-            var parameters = new NavigationParameters();
-            parameters.Add(GlobalInfos.NavigationServiceName, m_NavigationService);
-            m_NavigationService.RequestNavigate(new Uri(GlobalInfos.HomeView, UriKind.Relative), parameters);
         }
 
         /// <summary>
@@ -100,6 +97,12 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
+        public void Load()
+        {
+            m_NavigationService.Region = m_RegionManager.Regions[RegionName];
+            Navigate(ViewsEnum.HomeView);
+        }
+
         /// <summary>
         /// Méthode de navigation vers le profil de l'utilisateur. Si l'utilisateur a une session, il sera redirigé vers sa
         /// page profil, sinon il sera redirigé vers la page de connexion.
@@ -114,6 +117,14 @@ namespace Bibliotheque.UI.ViewModels
             {
                 Navigate(ViewsEnum.LoginView);
             }
+        }
+
+        /// <summary>
+        /// Charge la vue initial (HomeView) dans la Region
+        /// </summary>
+        public void NavigateToHome()
+        {
+            Navigate(ViewsEnum.HomeView);
         }
 
         /// <summary>
