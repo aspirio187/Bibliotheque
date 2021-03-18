@@ -1,0 +1,57 @@
+﻿<ContentControl x:Class="Bibliotheque.UI.Views.ProfileInformationsView"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+        mc:Ignorable="d"
+        Height="450" Width="800">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+               Content="Informations du profil" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+               FontSize="25"/>
+
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <!-- EmailAddress -->
+            <TextBlock Text="Adresse Email :" Width="200" Margin="5" />
+            <TextBox Text="{}" IsEnabled="False" Width="200" Margin="5 0" />
+            <!-- FirstName -->
+            <TextBlock Text="Prénom :" Width="200" Margin="5" />
+            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <!-- LastName -->
+            <TextBlock Text="Nom de famille :" Width="200" Margin="5" />
+            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <!-- PhoneNumber -->
+            <TextBlock Text="Numéro de téléphone :" Width="200" Margin="5" />
+            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <!-- Gender -->
+            <TextBlock Text="Sexe :" Width="200" Margin="5" />
+            <ComboBox Width="200" Margin="5 0"
+                ItemsSource="{Binding GendersList}" SelectedItem="{Binding Gender}"/>
+            <!-- Birthdate -->
+            <TextBlock Text="Date de naissance" Width="200" Margin="5" />
+            <DatePicker Width="200" Margin="5 0"
+                SelectedDate="{Binding BirthDate}" IsEnabled="False" />
+        </StackPanel>
+
+        <!-- Aucune fonction pour la photo de profil n'a encore été implémenté, ceci se fera vers la fin -->
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Image Height="200" Width="200" Margin="5"/>
+            <TextBlock Text="{Binding FilePath}" Width="200" Margin="5" />
+            <Button Content="Choisir une image" Width="200" Margin="0 5"/>
+        </StackPanel>
+    </Grid>
+</ContentControl>

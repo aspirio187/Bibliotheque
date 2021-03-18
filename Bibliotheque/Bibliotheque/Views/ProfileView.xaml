@@ -4,9 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
+        prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Height="450" Width="800">
-    <Grid>
-        
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <Button Content="Informations" Command="{Binding NavigateToInformationCommand}"/>
+            <Button Content="Adresse" Command="{Binding NavigateToAddressCommand}"/>
+            <Button Content="Mot de passe" Command="{Binding NavigateToPasswordCommand}"/>
+            <Button Content="Emprunts" Command="{Binding NavigateToBorrowCommand}"/>
+            <Button Content="Historique" Command="{Binding NavigateToHistoryCommand}"/>
+        </StackPanel>
+
+        <ContentControl Grid.Column="1"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        prism:RegionManager.RegionName="ProfilRegion" >
+            <behavior:Interaction.Triggers>
+                <behavior:EventTrigger EventName="Loaded">
+                    <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+                </behavior:EventTrigger>
+            </behavior:Interaction.Triggers>
+        </ContentControl>
     </Grid>
 </ContentControl>
