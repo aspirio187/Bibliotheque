@@ -20,7 +20,7 @@
             <DockPanel Grid.Row="0">
                 <Border Width="200" Height="auto" BorderBrush="blue" BorderThickness="5" >
                     <StackPanel>
-                        <Image Source="/Views/le throne de fer.jpg" Width="200" Height="250"/>
+                        <Image Source="/Images/le throne de fer.jpg" Width="200" Height="250"/>
                         <TextBlock Text="TITRE" Margin="5"/>
                         <Button Content="Détails" Margin="5"/>
                     </StackPanel>
@@ -30,8 +30,8 @@
             <DockPanel Grid.Row="1">
                 <Border Width="200" Height="auto" BorderBrush="blue" BorderThickness="5" >
                     <StackPanel>
-                        <Image Source="/Views/le throne de fer.jpg" Width="200" Height="250"/>
-                        <TextBlock Text="TITRE" Margin="5"/>
+                        <Image Source="/Images/le throne de fer.jpg" Width="200" Height="250"/>
+                        <TextBlock Text="TITRE" MaxWidth="200" Margin="5"/>
                         <Button Content="Détails" Margin="5"/>
                     </StackPanel>
                 </Border>
