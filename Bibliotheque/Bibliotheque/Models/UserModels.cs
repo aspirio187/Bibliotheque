@@ -9,4 +9,5 @@ namespace Bibliotheque.UI.Models
     public record UserForCreationRecord(string Email, string Password, string FirstName, string LastName, string PhoneNumber, GenderRecord Gender, DateTime BirthDate, AddressForCreationRecord Address);
     public record UserConnectionRecord(string Email, string Password);
     public record UserCurrectSessionRecord(Guid Id, string Email, Guid Token);
+    public record UserRecord(Guid Id, string Email, string FirstName, string LastName, string PhoneNumber, string Gender, DateTime BirthDate);
 }

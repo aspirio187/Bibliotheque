@@ -25,7 +25,7 @@
 
         <ContentControl Grid.Column="1"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                        prism:RegionManager.RegionName="ProfilRegion" >
+                        prism:RegionManager.RegionName="ProfileRegion" >
             <behavior:Interaction.Triggers>
                 <behavior:EventTrigger EventName="Loaded">
                     <prism:InvokeCommandAction Command="{Binding LoadCommand}" />

@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bibliotheque.UI.Views"
         mc:Ignorable="d"
-        Height="450" Width="800">
+        Height="auto" Width="auto">
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -27,16 +27,16 @@
         <StackPanel Grid.Column="0" Grid.Row="1">
             <!-- EmailAddress -->
             <TextBlock Text="Adresse Email :" Width="200" Margin="5" />
-            <TextBox Text="{}" IsEnabled="False" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding Email}" IsEnabled="False" Width="200" Margin="5 0" />
             <!-- FirstName -->
             <TextBlock Text="Prénom :" Width="200" Margin="5" />
-            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding User.FirstName}" Width="200" Margin="5 0" />
             <!-- LastName -->
             <TextBlock Text="Nom de famille :" Width="200" Margin="5" />
-            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding User.LastName}" Width="200" Margin="5 0" />
             <!-- PhoneNumber -->
             <TextBlock Text="Numéro de téléphone :" Width="200" Margin="5" />
-            <TextBox Text="{}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding User.PhoneNumber}" Width="200" Margin="5 0" />
             <!-- Gender -->
             <TextBlock Text="Sexe :" Width="200" Margin="5" />
             <ComboBox Width="200" Margin="5 0"
@@ -45,12 +45,18 @@
             <TextBlock Text="Date de naissance" Width="200" Margin="5" />
             <DatePicker Width="200" Margin="5 0"
                 SelectedDate="{Binding BirthDate}" IsEnabled="False" />
+            <!-- Button -->
+            <Button Content="Modifier" Width="200" Margin="10" Command="{Binding ModifyCommand}" />
         </StackPanel>
 
         <!-- Aucune fonction pour la photo de profil n'a encore été implémenté, ceci se fera vers la fin -->
         <StackPanel Grid.Row="1" Grid.Column="1">
-            <Image Height="200" Width="200" Margin="5"/>
-            <TextBlock Text="{Binding FilePath}" Width="200" Margin="5" />
+            <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                <Image Height="200" Width="200" />
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Margin="5" >
+                <TextBlock Text="{Binding FilePath}" Width="200" />
+            </Border>
             <Button Content="Choisir une image" Width="200" Margin="0 5"/>
         </StackPanel>
     </Grid>

@@ -26,7 +26,28 @@ namespace Bibliotheque.UI.Profiles
                 .ForMember(
                     dest => dest.BirthDate,
                     opt => opt.MapFrom(src => src.BirthDate));
+
             CreateMap<UserConnectionRecord, LoginRequest>();
+
+            CreateMap<UserForUpdateModel, UserEntity>()
+                .ForMember(
+                    dest => dest.Gender,
+                    opt => opt.MapFrom(
+                        src => src.Gender.Name))
+                .ForMember(
+                    dest => dest.BirthDate,
+                    opt => opt.MapFrom(
+                        src => (DateTimeOffset)src.DateBirth));
+
+            CreateMap<UserEntity, UserForUpdateModel>()
+                .ForMember(
+                    dest => dest.Gender,
+                    opt => opt.MapFrom(
+                        src => new GenderRecord(src.Gender)))
+                .ForMember(
+                    dest => dest.DateBirth,
+                    opt => opt.MapFrom(
+                        src => src.BirthDate.DateTime));
         }
     }
 }
