@@ -15,19 +15,13 @@ using System.Windows.Shapes;
 namespace Bibliotheque.UI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour ShellView.xaml
+    /// Logique d'interaction pour ProfileView.xaml
     /// </summary>
-    public partial class ShellView : Window
+    public partial class ProfileView : ContentControl
     {
-        public ShellView()
+        public ProfileView()
         {
             InitializeComponent();
-        }
-
-        private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
         }
     }
 }

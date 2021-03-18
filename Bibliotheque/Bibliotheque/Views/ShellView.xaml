@@ -19,15 +19,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Column="0"
-                    Grid.Row="0" >
+        <DockPanel x:Name="TopBar" Grid.Column="0" Grid.Row="0" MouseDown="TopBar_MouseDown" >
             <DockPanel>
-                <Button Content="B" Width="30" Height="30"
-                        Command="{Binding GoBackCommand}" />
+                <Button Width="30" Height="30"
+                        Command="{Binding GoBackCommand}" >
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Icons/Back.png" />
+                    </Button.Content>
+                </Button>
             </DockPanel>
             <DockPanel HorizontalAlignment="Left">
-                <Button x:Name="Profile" Content="P" Width="30" Height="30"
-                        Command="{Binding NavigateToProfileCommand}" />
+                <Button Width="30" Height="30"
+                        Command="{Binding NavigateToProfileCommand}" >
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Icons/Profile.png" />
+                    </Button.Content>
+                </Button>
             </DockPanel>
 
             <DockPanel HorizontalAlignment="Left" >
@@ -38,9 +45,17 @@
 
             <DockPanel HorizontalAlignment="Right">
                 <Button Height="30" Width="30"      
-                    x:Name="MinimizeButton" />
-                <Button Height="30" Width="30"
-                    x:Name="ExitButton" />
+                    x:Name="MinimizeButton">
+                    <Button.Content>
+                        <Image Source="/Icons/Minimize.png" />
+                    </Button.Content>
+                </Button>
+                <Button x:Name="ExitButton" Height="30" Width="30"
+                        Command="{Binding ExitCommand}">
+                    <Button.Content>
+                        <Image Source="pack://application:,,,/Icons/Close.png" />
+                    </Button.Content>
+                </Button>
             </DockPanel>
         </DockPanel>
 

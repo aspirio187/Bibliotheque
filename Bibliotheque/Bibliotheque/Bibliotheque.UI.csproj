@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\Back.png" />
+    <None Remove="Icons\Close.png" />
+    <None Remove="Icons\Minimize.png" />
+    <None Remove="Icons\Profile.png" />
     <None Remove="Views\le throne de fer.jpg" />
   </ItemGroup>
 
@@ -25,7 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Icons\" />
+    <Resource Include="Icons\Back.png" />
+    <Resource Include="Icons\Close.png" />
+    <Resource Include="Icons\Minimize.png" />
+    <Resource Include="Icons\Profile.png" />
   </ItemGroup>
 
 </Project>

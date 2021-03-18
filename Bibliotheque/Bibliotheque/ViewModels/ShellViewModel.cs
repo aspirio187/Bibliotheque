@@ -35,7 +35,7 @@ namespace Bibliotheque.UI.ViewModels
         public DelegateCommand GoBackCommand { get; set; }
         public DelegateCommand NavigateToProfileCommand { get; set; }
         public DelegateCommand NavigateToHomeCommand { get; set; }
-        public DelegateCommand NavigateToCollectionCommand { get; set; }
+        public DelegateCommand NavigateToBooksCommand { get; set; }
         public DelegateCommand NavigateToAdminPanelCommand { get; set; }
 
         public DelegateCommand ExitCommand { get; set; }
@@ -60,13 +60,14 @@ namespace Bibliotheque.UI.ViewModels
             m_NavigationService = navigationService ??
                 throw new ArgumentNullException(nameof(navigationService));
             // Défini la Region dans laquelle se passeront toutes les navigations
-            m_NavigationService.Region = m_RegionManager.Regions[RegionName];
             m_Repository = repository ??
                 throw new ArgumentNullException(nameof(repository));
 
             // Initialisation des commandes
             GoBackCommand = new(GoBack);
             NavigateToProfileCommand = new(NavigateToProfile);
+
+            ExitCommand = new(async () => await Exit());
 
             // Vérifie si l'utilisateur a déjà une session en cours
             Task.Run(UserIsConnected);
