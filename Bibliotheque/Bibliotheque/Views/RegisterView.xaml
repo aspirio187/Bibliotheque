@@ -40,10 +40,8 @@
                     <TextBox x:Name="LastNameBox" Text="{Binding LastName}" Width="200" />
                     <!-- Gender -->
                     <TextBlock Text="Sex :" Margin="0 5" />
-                    <ComboBox x:Name="cmbGender" SelectedIndex="0" SelectedItem="{Binding Gender}">
-                        <ComboBoxItem Content="Homme" />
-                        <ComboBoxItem Content="Femme" />
-                    </ComboBox>
+                    <ComboBox x:Name="cmbGender" SelectedIndex="0" 
+                              ItemsSource="{Binding GendersList}" SelectedItem="{Binding Gender}" />
                     <!-- Birthdate -->
                     <TextBlock Text="Date de naissance :" Margin="0 5" />
                     <DatePicker x:Name="DateBox" SelectedDate="{Binding BirthDate}"/>
@@ -74,7 +72,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Content="S'enregistrer" IsEnabled="{Binding CanRegister}"/>
+            <Button Content="S'enregistrer" Command="{Binding RegisterCommand}" IsEnabled="{Binding CanRegister}"/>
         </StackPanel>
     </Grid>
 </ContentControl>

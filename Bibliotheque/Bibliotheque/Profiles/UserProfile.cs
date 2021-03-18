@@ -14,7 +14,10 @@ namespace Bibliotheque.UI.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserForCreationRecord, UserEntity>();
+            CreateMap<UserForCreationRecord, UserEntity>()
+                .ForMember(
+                    dest => dest.BirthDate,
+                    opt => opt.MapFrom(src => src.BirthDate));
             CreateMap<UserConnectionRecord, LoginRequest>();
         }
     }

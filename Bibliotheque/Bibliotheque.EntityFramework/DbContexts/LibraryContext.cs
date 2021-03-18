@@ -1,4 +1,5 @@
 ﻿using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.StaticData;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,24 @@ namespace Bibliotheque.EntityFramework.DbContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=BibliothequeDb;Trusted_Connection=True;");
+            //optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=BibliothequeDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Database=BibliothequeDb;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (RolesEnum role in Enum.GetValues(typeof(RolesEnum)))
+            {
+                modelBuilder.Entity<RoleEntity>().HasData(new RoleEntity()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = RoleData.GetRole(role),
+                    NormalizedName = RoleData.GetRole(role).ToUpper()
+                });
+            }
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

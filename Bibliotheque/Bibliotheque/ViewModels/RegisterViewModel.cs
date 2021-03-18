@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
 using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
@@ -88,6 +89,15 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
+        private ObservableCollection<GenderRecord> m_GendersList;
+
+        public ObservableCollection<GenderRecord> GendersList
+        {
+            get { return m_GendersList; }
+            set { SetProperty(ref m_GendersList, value); }
+        }
+
+
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
@@ -155,7 +165,7 @@ namespace Bibliotheque.UI.ViewModels
             get { return m_PasswordConfirmation; }
             set
             {
-                if (PasswordIsValid(value))
+                if (!PasswordIsValid(value))
                     RaiseError(RegisterErrors.InvalidPasswordConfirmation,
                         Properties.PasswordConfirmation,
                         "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial");
@@ -204,27 +214,27 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
-        private string m_Gender;
+        private GenderRecord m_Gender;
 
-        public string Gender
+        public GenderRecord Gender
         {
             get { return m_Gender; }
             set { SetProperty(ref m_Gender, value); }
         }
 
-        private DateTimeOffset m_BirthDate;
+        private DateTime m_BirthDate;
 
-        public DateTimeOffset BirthDate
+        public DateTime BirthDate
         {
             get { return m_BirthDate; }
             set
             {
-                if (value >= DateTimeOffset.Now)
+                if (value >= DateTime.Now)
                     RaiseError(RegisterErrors.InvalidDate, Properties.BirthDate, "La date fournie est invalide!");
                 else
                     ClearError(RegisterErrors.InvalidDate, Properties.BirthDate);
 
-                if ((DateTimeOffset.Now.Year - value.Year) < 12)
+                if ((DateTime.Now.Year - value.Year) < 12)
                     RaiseError(RegisterErrors.AgeMinimum, Properties.BirthDate, "L'age minimal pour pouvoir accéder à un espace client est de 12 ans.");
                 else
                     ClearError(RegisterErrors.AgeMinimum, Properties.BirthDate);
@@ -329,6 +339,8 @@ namespace Bibliotheque.UI.ViewModels
             m_Mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
 
+            GendersList = new(GendersData.GetGenders());
+
             RegisterCommand = new(async () => await Register());
         }
 
@@ -407,7 +419,8 @@ namespace Bibliotheque.UI.ViewModels
                 !string.IsNullOrEmpty(PasswordConfirmation) &&
                 !string.IsNullOrEmpty(FirstName) &&
                 !string.IsNullOrEmpty(LastName) &&
-                !string.IsNullOrEmpty(Gender) &&
+                Gender != null &&
+                !string.IsNullOrEmpty(Gender.Name) &&
                 !string.IsNullOrEmpty(Street) &&
                 !string.IsNullOrEmpty(ZipCode) &&
                 !string.IsNullOrEmpty(City) &&
@@ -454,7 +467,7 @@ namespace Bibliotheque.UI.ViewModels
             return EmailIsValid(Email) && EmailIsValid(EmailConfirmation) && Email.Equals(EmailConfirmation) &&
                 PasswordIsValid(Password) && PasswordIsValid(PasswordConfirmation) && Password.Equals(PasswordConfirmation) &&
                 AllFieldsAreFull() &&
-                ((DateTimeOffset.Now.Year - BirthDate.Year) > 12);
+                ((DateTime.Now.Year - BirthDate.Year) > 12);
         }
 
         /// <summary>
