@@ -44,7 +44,7 @@ namespace Bibliotheque.UI.ViewModels
     /// <summary>
     /// Objet 'Error'
     /// </summary>
-    public record ErrorRecord(RegisterErrors ErrorType, PropertyInfo Property, string ErrorMessage);
+    public record RegisterErrorRecord(RegisterErrors ErrorType, PropertyInfo Property, string ErrorMessage);
 
     public class RegisterViewModel : BindableBase, INavigationAware, IJournalAware
     {
@@ -82,9 +82,9 @@ namespace Bibliotheque.UI.ViewModels
         /********* Collections relatives à la vue **********/
         /***************************************************/
 
-        private ObservableCollection<ErrorRecord> m_ErrorsList = new();
+        private ObservableCollection<RegisterErrorRecord> m_ErrorsList = new();
 
-        public ObservableCollection<ErrorRecord> ErrorsList
+        public ObservableCollection<RegisterErrorRecord> ErrorsList
         {
             get { return m_ErrorsList; }
             set
@@ -395,7 +395,7 @@ namespace Bibliotheque.UI.ViewModels
                 if (!error.ErrorMessage.Equals(errorMessage) && !error.ErrorType.Equals(errorType))
                 {
                     int i = ErrorsList.IndexOf(error);
-                    ErrorRecord newError = new(errorType, GetPropertyInfo(property), errorMessage);
+                    RegisterErrorRecord newError = new(errorType, GetPropertyInfo(property), errorMessage);
                     ErrorsList.RemoveAt(i);
                     ErrorsList.Insert(i, newError);
                 }

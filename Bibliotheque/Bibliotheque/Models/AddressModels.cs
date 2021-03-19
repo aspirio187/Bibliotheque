@@ -8,5 +8,4 @@ namespace Bibliotheque.UI.Models
 {
     public record AddressRecord(Guid ID, string FullAddress, string FullCity);
     public record AddressForCreationRecord(string Street, string Appartment, string ZipCode, string City);
-    public record AddressForUpdateRecord(Guid Id, string Street, string Appartment, string ZipCode, string City);
 }

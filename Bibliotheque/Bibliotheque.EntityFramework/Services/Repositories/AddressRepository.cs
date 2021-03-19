@@ -13,6 +13,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> AddressExists(Guid addressID);
         Task<IEnumerable<AddressEntity>> GetAddresses();
         Task<AddressEntity> GetAddress(Guid addressId);
+        Task<AddressEntity> GetUserAddress(Guid userId);
         void AddAddress(AddressEntity address);
     }
 
@@ -34,6 +35,11 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             return await m_Context.Addresses.FirstOrDefaultAsync(x => x.Id == addressId);
         }
 
+        public async Task<AddressEntity> GetUserAddress(Guid userId)
+        {
+            var user = await m_Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            return await GetAddress(user.AddressId);
+        }
         public void AddAddress(AddressEntity address)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));

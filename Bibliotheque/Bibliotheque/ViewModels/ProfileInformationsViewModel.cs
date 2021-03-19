@@ -20,9 +20,7 @@ namespace Bibliotheque.UI.ViewModels
         private readonly ILibraryRepository m_Repository;
         private readonly IMapper m_Mapper;
 
-        private IRegionNavigationService m_Navigation;
-
-        private UserCurrentSessionRecord m_CurrectSession;
+        private UserCurrentSessionRecord m_CurrentSession;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -54,54 +52,12 @@ namespace Bibliotheque.UI.ViewModels
             set { SetProperty(ref m_User, value); }
         }
 
-
-        private string m_Email;
-
-        public string Email
-        {
-            get { return m_Email; }
-            set { SetProperty(ref m_Email, value); }
-        }
-
-        private string m_FirstName;
-
-        public string FirstName
-        {
-            get { return m_FirstName; }
-            set { SetProperty(ref m_FirstName, value); }
-        }
-
-        private string m_LastName;
-
-        public string LastName
-        {
-            get { return m_LastName; }
-            set { SetProperty(ref m_LastName, value); }
-        }
-
-        private string m_PhoneNumber;
-
-        public string PhoneNumber
-        {
-            get { return m_PhoneNumber; }
-            set { SetProperty(ref m_PhoneNumber, value); }
-        }
-
-
         private GenderRecord m_Gender;
 
         public GenderRecord Gender
         {
             get { return m_Gender; }
             set { SetProperty(ref m_Gender, value); }
-        }
-
-        private DateTime m_BirthDate;
-
-        public DateTime BirthDate
-        {
-            get { return m_BirthDate; }
-            set { SetProperty(ref m_BirthDate, value); }
         }
         #endregion
 
@@ -122,7 +78,7 @@ namespace Bibliotheque.UI.ViewModels
         /// </summary>
         public async Task LoadData()
         {
-            User = m_Mapper.Map<UserForUpdateModel>(await m_Repository.GetUserAsync(m_CurrectSession.Id));
+            User = m_Mapper.Map<UserForUpdateModel>(await m_Repository.GetUserAsync(m_CurrentSession.Id));
             Gender = GendersCollection.FirstOrDefault(x => x.Name.Equals(User.Gender.Name));
         }
 
@@ -136,7 +92,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_CurrectSession == null) m_CurrectSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
+            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
             Task.Run(LoadData);
         }
 
