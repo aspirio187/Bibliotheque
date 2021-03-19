@@ -37,6 +37,7 @@ namespace Bibliotheque
             containerRegistry.RegisterForNavigation<ProfileView>();
             containerRegistry.RegisterForNavigation<ProfileInformationsView>();
             containerRegistry.RegisterForNavigation<ProfileAddressView>();
+            containerRegistry.RegisterForNavigation<ProfilePasswordView>();
         }
 
         private IMapper InitAutoMapper()
