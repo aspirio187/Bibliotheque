@@ -10,8 +10,13 @@ namespace Bibliotheque.EntityFramework.Entities
     public class RoleEntity
     {
         public Guid Id { get; set; }
+
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(25)]
         public string Name { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(25)]
         public string NormalizedName { get; set; }
     }
 }

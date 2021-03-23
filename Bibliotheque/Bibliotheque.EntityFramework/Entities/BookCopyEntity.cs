@@ -17,7 +17,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [MaxLength(15)]
         public string State { get; set; }
 
-        public int Quantity { get; set; }
+        public uint Quantity { get; set; }
 
         [ForeignKey("BookId")]
         public BookEntity Book { get; set; }

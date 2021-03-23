@@ -37,8 +37,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
 
         public async Task<AddressEntity> GetUserAddress(Guid userId)
         {
-            var user = await m_Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            return await GetAddress(user.AddressId);
+            return await m_Context.Addresses.FirstOrDefaultAsync(x => x.UserId == userId);
         }
         public void AddAddress(AddressEntity address)
         {

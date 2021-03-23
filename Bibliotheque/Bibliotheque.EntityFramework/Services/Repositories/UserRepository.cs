@@ -99,12 +99,6 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         {
             // Vérifie si l'entité utilisateur en paramètre est null
             if (user == null) throw new ArgumentNullException(nameof(user));
-            // Vérifie si l'entité addresse de l'entité utilisateur en paramètre est null
-            if (user.Address == null) throw new ArgumentNullException(nameof(user.Address));
-            // Crée un ID à l'adresse
-            user.Address.Id = Guid.NewGuid();
-            // Ajoute l'adresse au contexte
-            m_Context.Entry(user.Address).State = EntityState.Added;
             // Récupère le role utilisateur pour le nouvel utilisateur
             user.Role = m_Context.Roles.FirstOrDefault(x => x.Name.Equals(RoleData.GetRole(RolesEnum.User)));
             // Vérifie si le role est null

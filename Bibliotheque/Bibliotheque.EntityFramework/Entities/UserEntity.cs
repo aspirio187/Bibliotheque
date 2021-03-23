@@ -54,8 +54,5 @@ namespace Bibliotheque.EntityFramework.Entities
         [ForeignKey("RoleId")]
         public RoleEntity Role { get; set; }
         public Guid RoleId { get; set; }
-        [ForeignKey("AddressId")]
-        public AddressEntity Address { get; set; }
-        public Guid AddressId { get; set; }
     }
 }

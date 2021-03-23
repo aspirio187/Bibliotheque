@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.EntityFramework.Entities
 {
-    public class ClassificationEntity
+    public class GenreEntity
     {
         public int Id { get; set; }
 
