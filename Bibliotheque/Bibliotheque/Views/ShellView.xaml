@@ -9,57 +9,59 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="ShellView" 
-        Height="600" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        Height="800" Width="1000" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None">
+    <Border BorderThickness="1" BorderBrush="Black">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <DockPanel x:Name="TopBar" Grid.Column="0" Grid.Row="0" MouseDown="TopBar_MouseDown">
-            <Button Width="30" Height="30" Command="{Binding GoBackCommand}" >
-                <Button.Content>
-                    <Image Source="pack://application:,,,/Icons/Back.png" />
-                </Button.Content>
-            </Button>
-            <Button Width="30" Height="30" Command="{Binding NavigateToProfileCommand}" >
-                <Button.Content>
-                    <Image Source="pack://application:,,,/Icons/Profile.png" />
-                </Button.Content>
-            </Button>
-
-            <DockPanel HorizontalAlignment="Left" >
-                <Button Content="Accueil" Width="150" Command="{Binding NavigateToHomeCommand}"/>
-                <Button Content="Livres" Width="150"/>
-                <Button Content="Administration" Width="150"/>
-            </DockPanel>
-
-            <DockPanel HorizontalAlignment="Right">
-                <Button x:Name="MinimizeButton" Height="30" Width="30" Click="MinimizeButton_Click" >
+            <DockPanel x:Name="TopBar" Grid.Column="0" Grid.Row="0" MouseDown="TopBar_MouseDown">
+                <Button Width="30" Height="30" Command="{Binding GoBackCommand}" >
                     <Button.Content>
-                        <Image Source="/Icons/Minimize.png" />
+                        <Image Source="pack://application:,,,/Icons/Back.png" />
                     </Button.Content>
                 </Button>
-                <Button Height="30" Width="30" Command="{Binding ExitCommand}">
+                <Button Width="30" Height="30" Command="{Binding NavigateToProfileCommand}" >
                     <Button.Content>
-                        <Image Source="pack://application:,,,/Icons/Close.png" />
+                        <Image Source="pack://application:,,,/Icons/Profile.png" />
                     </Button.Content>
                 </Button>
-            </DockPanel>
-        </DockPanel>
 
-        <ContentControl Grid.Column="1" Grid.Row="1"
+                <DockPanel HorizontalAlignment="Left" >
+                    <Button Content="Accueil" Width="150" Command="{Binding NavigateToHomeCommand}"/>
+                    <Button Content="Livres" Width="150"/>
+                    <Button Content="Administration" Width="150"/>
+                </DockPanel>
+
+                <DockPanel HorizontalAlignment="Right">
+                    <Button x:Name="MinimizeButton" Height="30" Width="30" Click="MinimizeButton_Click" >
+                        <Button.Content>
+                            <Image Source="/Icons/Minimize.png" />
+                        </Button.Content>
+                    </Button>
+                    <Button Height="30" Width="30" Command="{Binding ExitCommand}">
+                        <Button.Content>
+                            <Image Source="pack://application:,,,/Icons/Close.png" />
+                        </Button.Content>
+                    </Button>
+                </DockPanel>
+            </DockPanel>
+
+            <ContentControl Grid.Column="1" Grid.Row="1"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                         prism:RegionManager.RegionName="MainRegion" Initialized="ContentControl_Initialized" >
-            <behavior:Interaction.Triggers>
-                <behavior:EventTrigger EventName="Loaded">
-                    <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
-                </behavior:EventTrigger>
-            </behavior:Interaction.Triggers>
-        </ContentControl>
-    </Grid>
+                <behavior:Interaction.Triggers>
+                    <behavior:EventTrigger EventName="Loaded">
+                        <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+                    </behavior:EventTrigger>
+                </behavior:Interaction.Triggers>
+            </ContentControl>
+        </Grid>
+    </Border>
 </Window>

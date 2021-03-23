@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
-            <Button Content="Informations" Command="{Binding NavigateToInformationsCommand}"/>
+            <Button Content="Informations" Command="{Binding NavigateToProfileInformationsCommand}"/>
             <Button Content="Adresse" Command="{Binding NavigateToAddressCommand}"/>
             <Button Content="Mot de passe" Command="{Binding NavigateToPasswordCommand}"/>
             <Button Content="Emprunts" Command="{Binding NavigateToBorrowsCommand}"/>

@@ -12,11 +12,17 @@ namespace Bibliotheque.EntityFramework.Entities
         public Guid Id { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(100)]
+        [MinLength(3)]
         public string Street { get; set; }
 
+        [MaxLength(3)]
+        [MinLength(1)]
         public string Appartment { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(50)]
+        [MinLength(3)]
         public string City { get; set; }
 
         [Required(AllowEmptyStrings = false)]

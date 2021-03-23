@@ -1,0 +1,34 @@
+﻿<ContentControl x:Class="Bibliotheque.UI.Views.AdminView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+             xmlns:prism="http://prismlibrary.com/"
+            xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
+            prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <Button Content="Livres" Command="{Binding NavigateToAdminBooksCommand}" />
+            <Button Content="Utilisateurs" Command="{Binding NavigateToAdminUsersCommand}" />
+            <Button Content="Liste noire" Command="{Binding NavigateToAdminBlackListCommand}" />
+        </StackPanel>
+
+        <ContentControl Grid.Column="1"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        prism:RegionManager.RegionName="AdminRegion" >
+            <behavior:Interaction.Triggers>
+                <behavior:EventTrigger EventName="Loaded">
+                    <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+                </behavior:EventTrigger>
+            </behavior:Interaction.Triggers>
+        </ContentControl>
+    </Grid>
+</ContentControl>

@@ -11,6 +11,7 @@ using Bibliotheque.EntityFramework.Services.Authentication;
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.UI.Views;
 using Prism.Ioc;
+using Prism.Modularity;
 using Prism.Unity;
 
 namespace Bibliotheque

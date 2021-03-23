@@ -38,4 +38,8 @@
     <Resource Include="Images\le throne de fer.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+  </ItemGroup>
+
 </Project>

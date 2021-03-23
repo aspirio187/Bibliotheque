@@ -6,6 +6,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,8 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
-
+        private string m_ImagePath;
+        public string ImagePath { get => m_ImagePath; set => SetProperty(ref m_ImagePath, value); }
 
         public HomeViewModel(ILibraryRepository repository, IMapper mapper)
         {
@@ -37,6 +39,9 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(repository));
             m_Mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            string imagePath = "../../../Images/Le throne de fer.jpg";
+            string fullPath = Path.GetFullPath(imagePath);
+            ImagePath = fullPath;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
