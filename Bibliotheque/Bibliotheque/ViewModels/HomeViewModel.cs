@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.UI.Helpers;
+using Bibliotheque.UI.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,6 +30,12 @@ namespace Bibliotheque.UI.ViewModels
         public DelegateCommand NavigateToRegisterCommand { get; set; }
 
         /***************************************************/
+        /********* Collections relatives à la vue **********/
+        /***************************************************/
+
+        public ObservableCollection<BookMiniatureModel> LastAddedBooks { get; set; }
+
+        /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
         private string m_ImagePath;
@@ -42,6 +50,8 @@ namespace Bibliotheque.UI.ViewModels
             string imagePath = "../../../Images/Le throne de fer.jpg";
             string fullPath = Path.GetFullPath(imagePath);
             ImagePath = fullPath;
+
+            LastAddedBooks = new(m_Mapper.Map<IEnumerable<BookMiniatureModel>>(m_Repository.GetLastBooks()));
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

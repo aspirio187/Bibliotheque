@@ -357,6 +357,13 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (CanRegister())
             {
+                UserForCreationRecord user = new(Email, Password, FirstName, LastName, PhoneNumber, Gender, BirthDate);
+                var userToCreate = m_Mapper.Map<UserEntity>(user);
+                if (userToCreate == null)
+                {
+                    ErrorClaim.RaiseError("User couldn't be mapped", user, userToCreate);
+                    return;
+                }
                 AddressForCreationRecord address = new(Street, Appartment, ZipCode, City);
                 var addressToCreate = m_Mapper.Map<AddressEntity>(address);
                 if (addressToCreate == null)
@@ -364,14 +371,7 @@ namespace Bibliotheque.UI.ViewModels
                     ErrorClaim.RaiseError("Address couldn't be mapped", address, addressToCreate);
                     return;
                 }
-                UserForCreationRecord user = new(Email, Password, FirstName, LastName, PhoneNumber, Gender, BirthDate, address);
-                var userToCreate = m_Mapper.Map<UserEntity>(user);
-                if (user == null)
-                {
-                    ErrorClaim.RaiseError("User couldn't be mapped", user, userToCreate);
-                    return;
-                }
-                m_Repository.AddUser(userToCreate);
+                m_Repository.AddUser(userToCreate, addressToCreate);
                 await m_Repository.SaveAsync();
                 GoBack();
             }
