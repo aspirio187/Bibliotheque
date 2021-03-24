@@ -18,7 +18,7 @@ namespace Bibliotheque.EntityFramework.DbContexts
         public DbSet<BookEntity> Books { get; set; }
         public DbSet<BorrowEntity> Borrows { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
-        public DbSet<GenreEntity> Classifications { get; set; }
+        public DbSet<GenreEntity> Genres { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         #endregion

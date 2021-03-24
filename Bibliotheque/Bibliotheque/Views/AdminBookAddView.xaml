@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Bibliotheque.UI.Views.AdminBookAddView"
+﻿<ContentControl x:Class="Bibliotheque.UI.Views.AdminBookAddView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,7 +24,7 @@
                 <TextBox Text="{Binding Title}" Width="200" Margin="5 0" />
                 <!-- Author -->
                 <TextBlock Text="Auteur" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Authors}" SelectedItem="{Binding Author}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Authors}" SelectedItem="{Binding Author}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Summary -->
                 <TextBlock Text="Résumé :" Width="200" Margin="5" />
                 <TextBox  Width="200" Height="200" Margin="5 0" 
@@ -36,13 +36,13 @@
             <StackPanel>
                 <!-- Editor -->
                 <TextBlock Text="Editeur :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Editors}" SelectedItem="{Binding Editor}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Editors}" SelectedItem="{Binding Editor}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Collection -->
                 <TextBlock Text="Collection :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Collections}" SelectedItem="{Binding Collection}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Collections}" SelectedItem="{Binding Collection}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Format -->
                 <TextBlock Text="Format :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Pages -->
                 <TextBlock Text="Pages :" Width="200" Margin="5" />
                 <TextBox Text="{Binding Pages}" Width="200" Margin="5 0" />
@@ -54,10 +54,10 @@
                 <TextBox Text="{Binding ISBN}" Width="200" Margin="5 0" />
                 <!-- Category -->
                 <TextBlock Text="Catégorie :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Classification -->
                 <TextBlock Text="Genre :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Classifications}" SelectedItem="{Binding Classification}" Width="200" Margin="5 0" />
+                <ComboBox ItemsSource="{Binding Genres}" SelectedItem="{Binding Genre}" Width="200" Margin="5 0" IsEditable="True" />
             </StackPanel>
             <StackPanel>
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" Height="300">
@@ -67,10 +67,10 @@
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" >
                     <TextBox Text="{Binding ImagePath}" />
                 </Border>
-                <Button Content="Ajouter" Width="250" Margin="5 0"/>
+                <Button Content="Ajouter" Width="250" />
             </StackPanel>
         </DockPanel>
 
         <Button Grid.Row="3" Content="Ajouter" Margin="5" Command="{Binding AddBookCommand}" />
     </Grid>
-</UserControl>
+</ContentControl>

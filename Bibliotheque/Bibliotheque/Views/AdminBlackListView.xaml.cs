@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Bibliotheque.UI.Views
 {
     /// <summary>
-    /// Logique d'interaction pour AdminBookAddView.xaml
+    /// Logique d'interaction pour AdminBlackListView.xaml
     /// </summary>
-    public partial class AdminBookAddView : ContentControl
+    public partial class AdminBlackListView : ContentControl
     {
-        public AdminBookAddView()
+        public AdminBlackListView()
         {
             InitializeComponent();
         }
