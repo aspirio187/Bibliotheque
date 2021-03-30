@@ -26,7 +26,7 @@ namespace Bibliotheque.UI.Helpers
         ProfileAddressView,
         ProfilePasswordView,
         ProfileBorrowView,
-        ProfileHistoryView
+        ProfileHistoryView,
         AdminView,
     }
 }

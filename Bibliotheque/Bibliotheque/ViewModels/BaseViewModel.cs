@@ -16,6 +16,8 @@ namespace Bibliotheque.UI.ViewModels
 {
     public abstract class BaseViewModel : BindableBase, INavigationAware, IJournalAware
     {
+        public record ErrorRecord(string Property, string Message);
+
         /********************************************************************/
         /*********************** Propriétés readonly ************************/
         /********************************************************************/
@@ -36,9 +38,9 @@ namespace Bibliotheque.UI.ViewModels
         /****************** Collections relatives à la vue ******************/
         /********************************************************************/
 
-        private ObservableCollection<ErrorModel> m_Errors;
+        private ObservableCollection<ErrorRecord> m_Errors;
 
-        public ObservableCollection<ErrorModel> Errors
+        public ObservableCollection<ErrorRecord> Errors
         {
             get { return m_Errors; }
             set { SetProperty(ref m_Errors, value); }
@@ -58,6 +60,23 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(repository));
             m_Mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+
+            Errors = new();
+        }
+
+        public virtual void CheckError(string property, string errorMessage, bool result)
+        {
+            var error = new ErrorRecord(property, errorMessage);
+            var existingError = Errors.FirstOrDefault(x => x.Property.Equals(property));
+
+            if (result == false && existingError is null)
+            {
+                Errors.Add(error);
+            }
+            else if (existingError is not null)
+            {
+                Errors.Remove(existingError);
+            }
         }
 
         /// <summary>
@@ -95,7 +114,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (m_NavigationService.Journal.CanGoBack)
             {
-                m_NavigationService.Journal.GoBack());
+                m_NavigationService.Journal.GoBack();
             }
         }
 

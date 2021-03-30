@@ -29,10 +29,12 @@ namespace Bibliotheque.EntityFramework.Entities
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
+        [MinLength(2)]
         public string FirstName { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
+        [MinLength(2)]
         public string LastName { get; set; }
 
         public DateTimeOffset BirthDate { get; set; }

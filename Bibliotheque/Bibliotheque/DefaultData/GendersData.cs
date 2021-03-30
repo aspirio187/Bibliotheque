@@ -9,14 +9,13 @@ namespace Bibliotheque.UI.DefaultData
 {
     public static class GendersData
     {
-        public static List<GenderRecord> GetGenders()
+        public static List<string> GetGenders()
         {
-            List<GenderRecord> genders = new()
+            return new()
             {
-                new GenderRecord("Homme"),
-                new GenderRecord("Femme")
+                "Homme",
+                "Femme"
             };
-            return genders;
         }
     }
 }

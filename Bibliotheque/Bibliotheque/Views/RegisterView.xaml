@@ -41,7 +41,7 @@
                     <!-- Gender -->
                     <TextBlock Text="Sex :" Margin="0 5" />
                     <ComboBox x:Name="cmbGender" SelectedIndex="0" 
-                              ItemsSource="{Binding GendersList}" SelectedItem="{Binding Gender}" />
+                              ItemsSource="{Binding Genders}" SelectedItem="{Binding Gender}" />
                     <!-- Birthdate -->
                     <TextBlock Text="Date de naissance :" Margin="0 5" />
                     <DatePicker x:Name="DateBox" SelectedDate="{Binding BirthDate}"/>
@@ -65,14 +65,14 @@
                 </StackPanel>
             </DockPanel>
             <Label Content="Tous les champs doivent être remplis (excepté l'appartement)" FontWeight="Bold" HorizontalContentAlignment="Left" />
-            <ItemsControl ItemsSource="{Binding ErrorsList}">
+            <ItemsControl ItemsSource="{Binding Errors}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" />
+                        <TextBlock Text="{Binding Message}" Foreground="Red" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Content="S'enregistrer" Command="{Binding RegisterCommand}" IsEnabled="{Binding CanRegister}"/>
+            <Button Content="S'enregistrer" Command="{Binding RegisterCommand}" />
         </StackPanel>
     </Grid>
 </ContentControl>

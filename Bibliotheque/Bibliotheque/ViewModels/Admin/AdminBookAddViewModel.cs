@@ -419,7 +419,7 @@ namespace Bibliotheque.UI.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
+            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
             if (m_CurrentSession == null)
             {
                 m_Navigation.Journal.GoBack();

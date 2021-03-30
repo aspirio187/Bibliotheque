@@ -23,8 +23,7 @@ namespace Bibliotheque.UI.Profiles
                     opt => opt.MapFrom(src =>
                         $"{src.ZipCode} - {src.City}"));
 
-            CreateMap<AddressForCreationRecord, AddressEntity>();
-            CreateMap<AddressEntity, AddressForUpdateModel>().ReverseMap();
+            CreateMap<AddressModel, AddressEntity>().ReverseMap();
         }
     }
 }

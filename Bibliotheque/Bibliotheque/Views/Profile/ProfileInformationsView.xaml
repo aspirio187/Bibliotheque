@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:Bibliotheque.UI.Views"
         mc:Ignorable="d"
         Height="auto" Width="auto">
@@ -17,6 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
@@ -27,24 +29,24 @@
         <StackPanel Grid.Column="0" Grid.Row="1">
             <!-- EmailAddress -->
             <TextBlock Text="Adresse Email :" Width="200" Margin="5" />
-            <TextBox Text="{Binding User.Email}" IsEnabled="False" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding Email}" IsEnabled="False" Width="200" Margin="5 0" />
             <!-- FirstName -->
             <TextBlock Text="Prénom :" Width="200" Margin="5" />
-            <TextBox Text="{Binding User.FirstName}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding FirstName}" Width="200" Margin="5 0" />
             <!-- LastName -->
             <TextBlock Text="Nom de famille :" Width="200" Margin="5" />
-            <TextBox Text="{Binding User.LastName}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding LastName}" Width="200" Margin="5 0" />
             <!-- PhoneNumber -->
             <TextBlock Text="Numéro de téléphone :" Width="200" Margin="5" />
-            <TextBox Text="{Binding User.PhoneNumber}" Width="200" Margin="5 0" />
+            <TextBox Text="{Binding PhoneNumber}" Width="200" Margin="5 0" />
             <!-- Gender -->
             <TextBlock Text="Sexe :" Width="200" Margin="5" />
             <ComboBox Width="200" Margin="5 0"
-                ItemsSource="{Binding GendersCollection}" SelectedItem="{Binding Gender}"/>
+                ItemsSource="{Binding Genders}" SelectedItem="{Binding Gender}"/>
             <!-- Birthdate -->
             <TextBlock Text="Date de naissance" Width="200" Margin="5" />
             <DatePicker Width="200" Margin="5 0"
-                SelectedDate="{Binding User.BirthDate}" IsEnabled="False" />
+                SelectedDate="{Binding BirthDate}" IsEnabled="False" SelectedDateFormat="Long" />
             <!-- Button -->
             <Button Content="Modifier" Width="200" Margin="10" Command="{Binding ModifyCommand}" />
         </StackPanel>
@@ -59,5 +61,21 @@
             </Border>
             <Button Content="Choisir une image" Width="200" Margin="0 5"/>
         </StackPanel>
+
+        <StackPanel Grid.Row="2" >
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Margin="5" Foreground="Red" FontWeight="Bold" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <behavior:Interaction.Triggers>
+            <behavior:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+            </behavior:EventTrigger>
+        </behavior:Interaction.Triggers>
     </Grid>
 </ContentControl>

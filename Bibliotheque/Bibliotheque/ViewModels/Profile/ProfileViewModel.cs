@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class ProfileViewModel : BaseViewModel /*BindableBase, INavigationAware, IJournalAware*/
+    public class ProfileViewModel : BaseViewModel
     {
         private readonly IRegionManager m_Region;
         private readonly string m_RegionName = "ProfileRegion";

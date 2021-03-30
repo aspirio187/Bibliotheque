@@ -17,15 +17,11 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class LoginViewModel : BindableBase, INavigationAware, IJournalAware
+    public class LoginViewModel : BaseViewModel
     {
-        private readonly IMapper m_Mapper;
-        private readonly ILibraryRepository m_Repository;
         private readonly IUserService m_UserService;
 
-        private IRegionNavigationService m_Navigation;
-
-        public bool IsRelevant { get; set; }
+        private UserConnection UserConnection { get; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -43,7 +39,12 @@ namespace Bibliotheque.UI.ViewModels
         public string Email
         {
             get { return m_Email; }
-            set { SetProperty(ref m_Email, value); }
+            set
+            {
+                var result = UserConnection.DefineEmail(value);
+                CheckError(result.Property.ToString(), result.ErrorMessage, result.Success);
+                SetProperty(ref m_Email, value);
+            }
         }
 
         private string m_Password;
@@ -51,27 +52,24 @@ namespace Bibliotheque.UI.ViewModels
         public string Password
         {
             get { return m_Password; }
-            set { SetProperty(ref m_Password, value); }
-        }
-
-        private string m_ErrorMessage;
-
-        public string ErrorMessage
-        {
-            get { return m_ErrorMessage; }
-            set { SetProperty(ref m_ErrorMessage, value); }
+            set
+            {
+                var result = UserConnection.DefinePassword(value);
+                CheckError(result.Property.ToString(), result.ErrorMessage, result.Success);
+                SetProperty(ref m_Password, value);
+            }
         }
         #endregion
 
         public LoginViewModel(ILibraryRepository repository, IMapper mapper, IUserService userService)
+            : base(repository, mapper)
         {
-            m_Repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
-            m_Mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
             m_UserService = userService ??
                 throw new ArgumentNullException(nameof(userService));
 
+            UserConnection = new();
+
+            // Initialisation des commandes
             LoginCommand = new DelegateCommand(async () => await Login());
             NavigateToRegisterCommand = new DelegateCommand(NavigateToRegister);
         }
@@ -85,33 +83,19 @@ namespace Bibliotheque.UI.ViewModels
         /// <returns>
         /// true Si la connexion est réussie. false Dans le cas contraire
         /// </returns>
-        public async Task<bool> LoginRequest(UserConnectionRecord login)
+        public async Task<bool> LoginRequest()
         {
-            if (login == null || string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Password))
-            {
-                ErrorMessage = "Veuillez entrer les informations dans les champs requis!";
-                return false;
-            }
+            var response = m_UserService.Login(m_Mapper.Map<LoginRequest>(UserConnection));
+            bool responseResult = response is null ? false : true;
+            CheckError("Reponse", "Les informations de connexions sont incorrects !", responseResult);
 
-            var response = m_UserService.Login(m_Mapper.Map<LoginRequest>(login));
-            if (response == null)
-            {
-                ErrorMessage = "Les informations de connexion sont incorrect!";
-                return false;
-            }
-
-            if (await m_Repository.UserIsBlackListed(response.Id))
-            {
-                ErrorMessage = "Vous êtes interdit dans cette bibliothèque!";
-                return false;
-            }
-
-            if (!await LocalFileHelper.WriteJsonFile(GlobalInfos.UserSessionPath, response))
-            {
-                ErrorMessage = "Une erreur est survenue lors de la connexion";
-                return false;
-            }
-
+            if (responseResult == false) return false;
+            bool blackListed = await m_Repository.UserIsBlackListed(response.Id);
+            CheckError("Black listé", "Vous êtes actuellement sur la liste noire !", blackListed);
+            if (blackListed) return false;
+            bool writeFile = await LocalFileHelper.WriteJsonFile(GlobalInfos.UserSessionPath, response);
+            CheckError("Session", "Une erreur inconnue est survenue lors de la connexion !", writeFile);
+            if (writeFile == false) return false;
             return true;
         }
 
@@ -120,58 +104,22 @@ namespace Bibliotheque.UI.ViewModels
         /// </summary>
         public async Task Login()
         {
-            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
-                ErrorMessage = "L'email et le mot de passe sont nécessaires à la connexion!";
-            if (!EmailHelper.IsValidEmail(Email))
-                ErrorMessage = "Le format de l'email est invalide!";
-
-            UserConnectionRecord login = new(Email, Password);
-
-            if (await LoginRequest(login))
+            bool UserIsValid = UserConnection.IsValid();
+            CheckError("Validité", "Les informations de connexion sont invalides !", UserIsValid);
+            if (UserIsValid)
             {
-                // TODO : Renvoyer vers la dernière page visitée
-                IsRelevant = false;
-                GoBack();
-            }
-        }
-
-        /// <summary>
-        /// Renvoi vers la page précédente
-        /// </summary>
-        private void GoBack()
-        {
-            if (m_Navigation.Journal.CanGoBack)
-            {
-                m_Navigation.Journal.GoBack();
+                bool loginResult = await LoginRequest();
+                CheckError("Connexion", "Une erreur est survenue lors de la connexion !", loginResult);
+                if (loginResult)
+                {
+                    GoBack();
+                }
             }
         }
 
         public void NavigateToRegister()
         {
-            if (m_Navigation == null) throw new ArgumentNullException(nameof(m_Navigation));
-            IsRelevant = true;
-            var parameters = new NavigationParameters();
-            parameters.Add(GlobalInfos.NavigationService, m_Navigation);
-            m_Navigation.RequestNavigate(new Uri(GlobalInfos.RegisterView, UriKind.Relative), parameters);
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-        }
-
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public bool PersistInHistory()
-        {
-            return true;
+            Navigate(ViewsEnum.RegisterView);
         }
     }
 }

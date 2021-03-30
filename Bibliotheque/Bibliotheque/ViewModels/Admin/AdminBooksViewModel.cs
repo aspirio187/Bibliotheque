@@ -133,7 +133,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { NavParameters.CurrentSessionParam, m_CurrentSession }
+                { GlobalInfos.CurrentSession, m_CurrentSession }
             };
 
             if (navigationParams != null)
@@ -159,7 +159,7 @@ namespace Bibliotheque.UI.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
+            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
             if (m_CurrentSession == null)
             {
                 m_Navigation.Journal.GoBack();

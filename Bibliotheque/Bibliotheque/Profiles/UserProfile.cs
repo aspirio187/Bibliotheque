@@ -15,7 +15,7 @@ namespace Bibliotheque.UI.Profiles
     {
         public UserProfile()
         {
-            CreateMap<UserForCreationRecord, UserEntity>()
+            CreateMap<UserRegistrationModel, UserEntity>()
                 .ForMember(
                     dest => dest.NormalizedEmail,
                     opt => opt.MapFrom(src => src.Email.ToUpper()))
@@ -27,18 +27,19 @@ namespace Bibliotheque.UI.Profiles
                     dest => dest.BirthDate,
                     opt => opt.MapFrom(src => src.BirthDate));
 
-            CreateMap<UserConnectionRecord, LoginRequest>();
+            CreateMap<UserConnection, LoginRequest>().ReverseMap();
 
-            CreateMap<UserForUpdateModel, UserEntity>()
-                .ForMember(
-                    dest => dest.Gender,
-                    opt => opt.MapFrom(
-                        src => src.Gender.Name))
+            CreateMap<UserEntity, UserModel>()
                 .ForMember(
                     dest => dest.BirthDate,
                     opt => opt.MapFrom(
-                        src => (DateTimeOffset)src.BirthDate));
-                
+                        src => src.BirthDate.UtcDateTime));
+
+            CreateMap<UserModel, UserEntity>()
+                .ForMember(
+                    dest => dest.BirthDate,
+                    opt => opt.MapFrom(
+                        src => new DateTimeOffset(src.BirthDate)));
 
             CreateMap<UserEntity, UserForUpdateModel>()
                 .ForMember(

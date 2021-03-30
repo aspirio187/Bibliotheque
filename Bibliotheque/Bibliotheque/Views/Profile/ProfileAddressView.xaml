@@ -6,11 +6,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Bibliotheque.UI.Views"
+             xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" >
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
@@ -20,26 +22,34 @@
         <StackPanel Grid.Row="1">
             <!-- Street and house number -->
             <TextBlock Text="Rue et numéro :" Width="200" Margin="5" />
-            <TextBox x:Name="Street" Text="{Binding Address.Street}" Width="200" Margin="5 0" />
+            <TextBox x:Name="Street" Text="{Binding Street}" Width="200" Margin="5 0" />
             <!-- Appartment -->
             <TextBlock Text="Appartement :" Width="200" Margin="5" />
-            <TextBox x:Name="Appartment" Text="{Binding Address.Appartment}" Width="200" Margin="5 0" />
+            <TextBox x:Name="Appartment" Text="{Binding Appartment}" Width="200" Margin="5 0" />
             <!-- ZipCode -->
             <TextBlock Text="Zipcode :" Width="200" Margin="5" />
-            <TextBox x:Name="ZipCode" Text="{Binding Address.ZipCode}" Width="200" Margin="5 0" />
+            <TextBox x:Name="ZipCode" Text="{Binding ZipCode}" Width="200" Margin="5 0" />
             <!-- City -->
             <TextBlock Text="Ville :" Width="200" Margin="5" />
-            <TextBox x:Name="City" Text="{Binding Address.City}" Width="200" Margin="5 0" />
-
-            <ItemsControl ItemsSource="{Binding Address.ErrorsCollection}" >
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Message}"  Width="200" Margin="5" TextWrapping="Wrap" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBox x:Name="City" Text="{Binding City}" Width="200" Margin="5 0" />
             <!-- Button -->
             <Button Content="Modify" Width="200" Margin="5" Command="{Binding ModifyCommand}"/>
         </StackPanel>
+
+        <StackPanel Grid.Row="2" >
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Margin="5" Foreground="Red" FontWeight="Bold" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <behavior:Interaction.Triggers>
+            <behavior:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+            </behavior:EventTrigger>
+        </behavior:Interaction.Triggers>
     </Grid>
 </ContentControl>
