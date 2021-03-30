@@ -30,6 +30,7 @@ namespace Bibliotheque.UI.ViewModels
         protected IRegionNavigationService m_NavigationService;
 
         public UserCurrentSessionRecord CurrentSession { get; protected set; }
+        public bool IsConnected { get; private set; }
 
         /********************************************************************/
         /****************** Collections relatives à la vue ******************/
@@ -69,10 +70,11 @@ namespace Bibliotheque.UI.ViewModels
         /// <param name="navigationParams">
         /// Dictionnaire de paramètre passable à la vue
         /// </param>
-        public void Navigate(ViewsEnum view, Dictionary<string, object> navigationParams = null)
+        public virtual void Navigate(ViewsEnum view, Dictionary<string, object> navigationParams = null)
         {
             NavigationParameters navigationParameters = new()
             {
+                { GlobalInfos.NavigationService, m_NavigationService },
                 { GlobalInfos.CurrentSession, CurrentSession }
             };
 
@@ -102,18 +104,18 @@ namespace Bibliotheque.UI.ViewModels
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public virtual void OnNavigatedFrom(NavigationContext navigationContext)
         {
             // Rien pour le moment
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (m_NavigationService is null) m_NavigationService = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
             if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
         }
 
-        public bool PersistInHistory()
+        public virtual bool PersistInHistory()
         {
             return true;
         }

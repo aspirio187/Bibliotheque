@@ -13,6 +13,7 @@ namespace Bibliotheque.UI.Helpers
         // Nom des paramètres partagés lors de la navigation
         public static readonly string NavigationService = "NavigationService";
         public static readonly string CurrentSession = "CurrentSession";
+        public static readonly string IsConnected = "IsConnected";
     }
 
     public enum ViewsEnum

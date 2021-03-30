@@ -27,6 +27,7 @@ namespace Bibliotheque.UI.ViewModels
         /**************** Propriétés objets ****************/
         /***************************************************/
 
+        public bool IsConnected { get; set; }
         public UserCurrentSessionRecord CurrentSession { get; set; }
 
         /***************************************************/
@@ -44,14 +45,6 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
-        private bool m_IsConnected = false;
-
-        public bool IsConnected
-        {
-            get { return m_IsConnected; }
-            set { SetProperty(ref m_IsConnected, value); }
-        }
-
 
         public ShellViewModel(IRegionManager regionManager, IRegionNavigationService navigationService, ILibraryRepository repository)
         {
@@ -89,7 +82,7 @@ namespace Bibliotheque.UI.ViewModels
             if (File.Exists(GlobalInfos.UserSessionPath))
             {
                 CurrentSession = await LocalFileHelper.ReadJsonFile<UserCurrentSessionRecord>(GlobalInfos.UserSessionPath);
-                if (CurrentSession != null)
+                if (CurrentSession is not null)
                 {
                     if (!await m_Repository.UserTokenHasChanged(CurrentSession.Id, CurrentSession.Token))
                         IsConnected = true;
@@ -145,8 +138,8 @@ namespace Bibliotheque.UI.ViewModels
             NavigationParameters navigationParameters = new()
             {
                 { GlobalInfos.NavigationService, m_NavigationService },
-                { GlobalInfos.ConnectionName, IsConnected },
-                { NavParameters.CurrentSessionParam, CurrentSession }
+                { GlobalInfos.IsConnected, IsConnected },
+                { GlobalInfos.CurrentSession, CurrentSession }
             };
 
             if (navigationParams != null)

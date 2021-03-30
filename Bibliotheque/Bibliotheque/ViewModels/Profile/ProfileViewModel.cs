@@ -14,15 +14,10 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class ProfileViewModel : BindableBase, INavigationAware, IJournalAware
+    public class ProfileViewModel : BaseViewModel /*BindableBase, INavigationAware, IJournalAware*/
     {
-        private readonly ILibraryRepository m_Repository;
-        private readonly IMapper m_Mapper;
         private readonly IRegionManager m_Region;
         private readonly string m_RegionName = "ProfileRegion";
-
-        private IRegionNavigationService m_Navigation;
-        private UserCurrentSessionRecord m_CurrentSession;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -40,11 +35,8 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
 
         public ProfileViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region)
+            : base(repository, mapper)
         {
-            m_Repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
-            m_Mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
             m_Region = region ??
                 throw new ArgumentNullException(nameof(region));
 
@@ -87,21 +79,11 @@ namespace Bibliotheque.UI.ViewModels
             Navigate(ViewsEnum.ProfileHistoryView);
         }
 
-        /// <summary>
-        /// Navigue vers la page de profile définie par l'élément de l'enum ProfileViews qui représente
-        /// le nom d'une ProfileView
-        /// </summary>
-        /// <param name="view">
-        /// Vue désirée
-        /// </param>
-        /// <param name="navigationParams">
-        /// Dictionnaire de paramètre passable à la vue
-        /// </param>
-        public void Navigate(ProfileViews view, Dictionary<string, object> navigationParams = null)
+        public override void Navigate(ViewsEnum view, Dictionary<string, object> navigationParams = null)
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.CurrentSession, m_CurrentSession }
+                { GlobalInfos.CurrentSession, CurrentSession }
             };
 
             if (navigationParams != null)
@@ -114,29 +96,14 @@ namespace Bibliotheque.UI.ViewModels
             m_Region.RequestNavigate(m_RegionName, new Uri(view.ToString(), UriKind.Relative), navigationParameters);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
-            if (m_CurrentSession == null)
+            base.OnNavigatedTo(navigationContext);
+            if (CurrentSession is null)
             {
-                m_Navigation.Journal.GoBack();
-                m_Navigation.Journal.Clear();
+                GoBack();
+                m_NavigationService.Journal.Clear();
             }
-        }
-
-        public bool PersistInHistory()
-        {
-            return false;
         }
     }
 }
