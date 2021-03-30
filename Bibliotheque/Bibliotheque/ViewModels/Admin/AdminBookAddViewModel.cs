@@ -17,19 +17,9 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class AdminBookAddViewModel : BindableBase, INavigationAware
+    public class AdminBookAddViewModel : BaseViewModel
     {
-
-        public record ErrorRecord(string Property, string Message);
-
-        private readonly ILibraryRepository m_Repository;
-        private readonly IMapper m_Mapper;
-        private readonly IRegionManager Region;
-
-
-        private IRegionNavigationService m_Navigation;
-        private UserCurrentSessionRecord m_CurrentSession;
-
+        private IRegionManager m_Region;
         private BookModel Book;
 
         /***************************************************/
@@ -92,14 +82,6 @@ namespace Bibliotheque.UI.ViewModels
         {
             get => m_BookGenres;
             set => SetProperty(ref m_BookGenres, value);
-        }
-
-        private ObservableCollection<ErrorRecord> m_Errors;
-
-        public ObservableCollection<ErrorRecord> Errors
-        {
-            get { return m_Errors; }
-            set { SetProperty(ref m_Errors, value); }
         }
         #endregion
         /***************************************************/
@@ -300,15 +282,9 @@ namespace Bibliotheque.UI.ViewModels
         }
         #endregion
 
-        public AdminBookAddViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region)
+        public AdminBookAddViewModel(ILibraryRepository repository, IMapper mapper)
+            : base(repository, mapper)
         {
-            m_Repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
-            m_Mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
-            Region = region ??
-                throw new ArgumentNullException(nameof(region));
-
             // Chargement des commandes
             LoadCommand = new(async () => await Load());
             AddBookCommand = new(async () => await AddBook());
@@ -331,15 +307,11 @@ namespace Bibliotheque.UI.ViewModels
 
         public async Task AddBook()
         {
-            if (BookGenres.Count < 1)
-            {
-                CheckError("Genres", "Un livre doit avoir au moins un genre !", false);
-            }
-            else if (!Book.IsValid())
-            {
-                CheckError("Livre", "Un ou des champs du livre sont incorrects !", false);
-            }
-            else
+            bool genresValid = (BookGenres.Count >= 1);
+            CheckError("Genres", "Un livre doit avoir au moins un genre !", genresValid);
+            bool bookValid = Book.IsValid();
+            CheckError("Livre", "Un ou des champs du livres sont invalides !", bookValid);
+            if (genresValid == true && bookValid == true)
             {
                 string newPath = $"../../../Images/{Title}-{Editor}-{Format}.jpg";
                 File.Copy(ImagePath, newPath, true);
@@ -382,50 +354,20 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
-        public void CheckError(string property, string errorMessage, bool result)
+        public void NavigateBack()
         {
-            var error = new ErrorRecord(property, errorMessage);
-            var existingError = Errors.FirstOrDefault(x => x.Property.Equals(property));
-
-            if (result == false && existingError is null)
-            {
-                Errors.Add(error);
-            }
-            else if (existingError is not null)
-            {
-                Errors.Remove(existingError);
-            }
+            Navigate(ViewsEnum.AdminBooksView);
         }
 
-
-        public void GoBack()
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation.Journal.CanGoBack)
+            base.OnNavigatedTo(navigationContext);
+            if (m_Region is null) m_Region = navigationContext.Parameters.GetValue<IRegionManager>("AdminRegion");
+            if (CurrentSession is null)
             {
-                m_Navigation.Journal.GoBack();
+                GoBack();
+                m_NavigationService.Journal.Clear();
             }
         }
-        #region Méthode implémentée par l'interface INavigationAware
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
-            if (m_CurrentSession == null)
-            {
-                m_Navigation.Journal.GoBack();
-                m_Navigation.Journal.Clear();
-            }
-        }
-        #endregion
     }
 }

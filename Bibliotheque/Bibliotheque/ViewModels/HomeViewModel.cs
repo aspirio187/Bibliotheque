@@ -15,20 +15,14 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class HomeViewModel : BindableBase, INavigationAware
+    public class HomeViewModel : BaseViewModel
     {
-        private readonly ILibraryRepository m_Repository;
-        private readonly IMapper m_Mapper;
-
-        private IRegionNavigationService m_Navigation;
-        private RegionManager m_Region;
-
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoginCommand { get; set; }
-        public DelegateCommand NavigateToRegisterCommand { get; set; }
+        public DelegateCommand LoadCommand { get; set; }
+        public DelegateCommand<object> NavigateToBookDetailCommand { get; set; }
 
         /***************************************************/
         /********* Collections relatives à la vue **********/
@@ -43,15 +37,14 @@ namespace Bibliotheque.UI.ViewModels
         public string ImagePath { get => m_ImagePath; set => SetProperty(ref m_ImagePath, value); }
 
         public HomeViewModel(ILibraryRepository repository, IMapper mapper)
+            : base(repository, mapper)
         {
-            m_Repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
-            m_Mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
             string imagePath = "../../../Images/Le throne de fer.jpg";
             string fullPath = Path.GetFullPath(imagePath);
             ImagePath = fullPath;
 
+
+            NavigateToBookDetailCommand = new DelegateCommand<object>(NavigateToBookDetail);
             Load();
         }
 
@@ -60,19 +53,9 @@ namespace Bibliotheque.UI.ViewModels
             LastAddedBooks = new(m_Mapper.Map<IEnumerable<BookMiniatureModel>>(m_Repository.GetLastBooks()));
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        public void NavigateToBookDetail(object bookId)
         {
 
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
         }
     }
 }

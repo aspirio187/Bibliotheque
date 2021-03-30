@@ -110,7 +110,7 @@ namespace Bibliotheque.UI.ViewModels
         /// <summary>
         /// Fonction de retour en arrière dans la pile de navigation
         /// </summary>
-        protected void GoBack()
+        protected virtual void GoBack()
         {
             if (m_NavigationService.Journal.CanGoBack)
             {

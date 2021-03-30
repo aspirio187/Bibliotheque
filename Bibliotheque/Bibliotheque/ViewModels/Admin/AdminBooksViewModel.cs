@@ -16,21 +16,10 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class AdminBooksViewModel : BindableBase, INavigationAware, IJournalAware
+    public class AdminBooksViewModel : BaseViewModel
     {
-        public enum AdminBookViews
-        {
-            AdminBookAddView,
-            AdminModifyBookView
-        }
-
-        private readonly ILibraryRepository m_Repository;
-        private readonly IMapper m_Mapper;
         private readonly IRegionManager m_Region;
         private readonly string m_RegionName = "AdminRegion";
-
-        private IRegionNavigationService m_Navigation;
-        private UserCurrentSessionRecord m_CurrentSession;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -70,12 +59,9 @@ namespace Bibliotheque.UI.ViewModels
         }
 
 
-        public AdminBooksViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region)
+        public AdminBooksViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region) :
+            base(repository, mapper)
         {
-            m_Repository = repository ??
-                throw new ArgumentNullException(nameof(repository));
-            m_Mapper = mapper ??
-                throw new ArgumentNullException(nameof(mapper));
             m_Region = region ??
                 throw new ArgumentNullException(nameof(region));
 
@@ -121,19 +107,20 @@ namespace Bibliotheque.UI.ViewModels
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("BookId", (int)id);
-            Navigate(AdminBookViews.AdminModifyBookView, parameters);
+            Navigate(ViewsEnum.AdminModifyBookView, parameters);
         }
 
         public void NavigateToAdminAddBookView()
         {
-            Navigate(AdminBookViews.AdminBookAddView);
+            Navigate(ViewsEnum.AdminBookAddView);
         }
 
-        public void Navigate(AdminBookViews view, Dictionary<string, object> navigationParams = null)
+        public override void Navigate(ViewsEnum view, Dictionary<string, object> navigationParams = null)
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.CurrentSession, m_CurrentSession }
+                { GlobalInfos.CurrentSession, CurrentSession },
+                { GlobalInfos.NavigationService, m_NavigationService }
             };
 
             if (navigationParams != null)
@@ -146,30 +133,14 @@ namespace Bibliotheque.UI.ViewModels
             m_Region.RequestNavigate(m_RegionName, new Uri(view.ToString(), UriKind.Relative), navigationParameters);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            return true;
-        }
-
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
-            if (m_CurrentSession == null)
+            base.OnNavigatedTo(navigationContext);
+            if (CurrentSession == null)
             {
-                m_Navigation.Journal.GoBack();
-                m_Navigation.Journal.Clear();
+                m_NavigationService.Journal.GoBack();
+                m_NavigationService.Journal.Clear();
             }
-        }
-
-        public bool PersistInHistory()
-        {
-            return false;
         }
     }
 }

@@ -28,5 +28,10 @@ namespace Bibliotheque.UI.Helpers
         ProfileBorrowView,
         ProfileHistoryView,
         AdminView,
+        AdminUsersView,
+        AdminBooksView,
+        AdminBookAddView,
+        AdminBlackListView,
+        AdminModifyBookView
     }
 }
