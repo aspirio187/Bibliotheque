@@ -18,7 +18,7 @@
         <StackPanel Grid.Row="0">
             <DockPanel Margin="5">
                 <TextBlock Text="Recherche : " HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding Search}" Width="600"/>
+                <TextBox Text="{Binding SearchKeyWord}" Width="600"/>
                 <Button Content="Rechercher" Width="100" HorizontalAlignment="Left" Command="{Binding SearchCommand}"/>
             </DockPanel>
             <DockPanel HorizontalAlignment="Center" Margin="5" >
@@ -27,29 +27,37 @@
             </DockPanel>
         </StackPanel>
 
-        <ItemsControl ItemsSource="{Binding LastAddedBooks}" Grid.Row="1">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="150" Margin="10 0" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Right">
-                        <StackPanel Orientation="Vertical">
-                            <CheckBox Content="Sélectionner" IsChecked="{Binding Selected}" />
-                            <Border BorderThickness="1" BorderBrush="Black" Height="200" Margin="5">
-                                <Image Source="{Binding Image}" />
-                            </Border>
-                            <Border BorderThickness="1" BorderBrush="Black" Margin="5" >
-                                <TextBlock Text="{Binding Title}" Margin="2"/>
-                            </Border>
-                            <Button Content="Modifier" Margin="5" 
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding Books}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="150" Margin="10 0" BorderBrush="Black" BorderThickness="1" >
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Content="Sélectionner" IsChecked="{Binding Selected}" />
+                                <Border BorderThickness="1" BorderBrush="Black" Height="200" Margin="5">
+                                    <Image Source="{Binding Image}" />
+                                </Border>
+                                <Border BorderThickness="1" BorderBrush="Black" Margin="5" >
+                                    <TextBlock Text="{Binding Title}" Margin="2"/>
+                                </Border>
+                                <Button Content="Modifier" Margin="5" 
                                     Command="{Binding NavigateToModifyBookViewCommand}" CommandParameter="{Binding Id}" />
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" Margin="5" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Margin="5" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <behavior:Interaction.Triggers>
+            <behavior:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+            </behavior:EventTrigger>
+        </behavior:Interaction.Triggers>
     </Grid>
 </ContentControl>

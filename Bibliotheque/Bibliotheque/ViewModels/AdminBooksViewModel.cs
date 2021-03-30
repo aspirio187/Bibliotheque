@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class AdminBookViewModel : BindableBase, INavigationAware
+    public class AdminBooksViewModel : BindableBase, INavigationAware, IJournalAware
     {
         public enum AdminBookViews
         {
-            AdminAddBookView,
+            AdminBookAddView,
             AdminModifyBookView
         }
 
@@ -36,16 +36,26 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
+        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand SearchCommand { get; set; }
         public DelegateCommand DeleteSelectedBooksCommand { get; set; }
-        public DelegateCommand<int> NavigateToModifyBookViewCommand { get; set; }
+        public DelegateCommand<object> NavigateToModifyBookViewCommand { get; set; }
         public DelegateCommand NavigateToAdminBookAddViewCommand { get; set; }
 
         /***************************************************/
         /********* Collections relatives à la vue **********/
         /***************************************************/
 
-        public ObservableCollection<BookAdminMiniatureModel> Books { get; set; }
+        private ObservableCollection<BookAdminMiniatureModel> m_Books;
+
+        public ObservableCollection<BookAdminMiniatureModel> Books
+        {
+            get => m_Books;
+            set
+            {
+                SetProperty(ref m_Books, value);
+            }
+        }
 
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
@@ -60,17 +70,26 @@ namespace Bibliotheque.UI.ViewModels
         }
 
 
-        public AdminBookViewModel(ILibraryRepository repository, IMapper mapper)
+        public AdminBooksViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region)
         {
             m_Repository = repository ??
                 throw new ArgumentNullException(nameof(repository));
             m_Mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
+            m_Region = region ??
+                throw new ArgumentNullException(nameof(region));
 
+            LoadCommand = new(async () => await Load());
             SearchCommand = new(async () => await Search());
-            DeleteSelectedBooksCommand = new(DeleteSelectedBooks);
-            NavigateToModifyBookViewCommand = new DelegateCommand<int>(NavigateToAdminModifyBookView);
+            DeleteSelectedBooksCommand = new(async () => await DeleteSelectedBooks());
+            NavigateToModifyBookViewCommand = new DelegateCommand<object>(NavigateToAdminModifyBookView);
             NavigateToAdminBookAddViewCommand = new(NavigateToAdminAddBookView);
+        }
+
+        public async Task Load()
+        {
+            var books = await m_Repository.GetBooksAsync();
+            Books = new(m_Mapper.Map<IEnumerable<BookAdminMiniatureModel>>(books));
         }
 
         public async Task Search()
@@ -79,24 +98,35 @@ namespace Bibliotheque.UI.ViewModels
             {
                 Books = new(m_Mapper.Map<IEnumerable<BookAdminMiniatureModel>>(await m_Repository.GetBooks(SearchKeyWord)));
             }
+            else
+            {
+                Books = new(m_Mapper.Map<IEnumerable<BookAdminMiniatureModel>>(await m_Repository.GetBooksAsync()));
+            }
         }
 
-        public void DeleteSelectedBooks()
+        public async Task DeleteSelectedBooks()
         {
             var result = Books.Where(x => x.Selected == true);
-            m_Repository.DeleteBooks(m_Mapper.Map<IEnumerable<BookEntity>>(result));
+            List<BookEntity> books = new();
+            foreach (var book in result)
+            {
+                books.Add(await m_Repository.GetBookAsync(book.Id));
+            }
+            m_Repository.DeleteBooks(books);
+            await m_Repository.SaveAsync();
+            LoadCommand.Execute();
         }
 
-        public void NavigateToAdminModifyBookView(int id)
+        public void NavigateToAdminModifyBookView(object id)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("BookId", id);
+            parameters.Add("BookId", (int)id);
             Navigate(AdminBookViews.AdminModifyBookView, parameters);
         }
 
         public void NavigateToAdminAddBookView()
         {
-            Navigate(AdminBookViews.AdminAddBookView);
+            Navigate(AdminBookViews.AdminBookAddView);
         }
 
         public void Navigate(AdminBookViews view, Dictionary<string, object> navigationParams = null)
@@ -128,13 +158,18 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
             if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
             if (m_CurrentSession == null)
             {
                 m_Navigation.Journal.GoBack();
                 m_Navigation.Journal.Clear();
             }
+        }
+
+        public bool PersistInHistory()
+        {
+            return false;
         }
     }
 }

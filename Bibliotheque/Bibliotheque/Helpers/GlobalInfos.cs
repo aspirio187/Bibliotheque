@@ -8,14 +8,11 @@ namespace Bibliotheque.UI.Helpers
 {
     public static class GlobalInfos
     {
+        // Nom du fichier qui contient les informations de session
         public static readonly string UserSessionPath = "SessionInformations";
-        public static readonly string NavigationServiceName = "NavigationService";
-        public static readonly string ConnectionName = "IsConnected";
-
-        // TODO : Stocker toutes les vues dans un enum comme pour les roles
-        public static readonly string HomeView = "HomeView";
-        public static readonly string LoginView = "LoginView";
-        public static readonly string RegisterView = "RegisterView";
+        // Nom des paramètres partagés lors de la navigation
+        public static readonly string NavigationService = "NavigationService";
+        public static readonly string CurrentSession = "CurrentSession";
     }
 
     public enum ViewsEnum
@@ -23,6 +20,12 @@ namespace Bibliotheque.UI.Helpers
         HomeView,
         LoginView,
         RegisterView,
-        ProfileView
+        ProfileView,
+        ProfileInformationsView,
+        ProfileAddressView,
+        ProfilePasswordView,
+        ProfileBorrowView,
+        ProfileHistoryView
+        AdminView,
     }
 }

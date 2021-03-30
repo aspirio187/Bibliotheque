@@ -37,7 +37,7 @@ namespace Bibliotheque.UI.ViewModels
         public DelegateCommand NavigateToProfileCommand { get; set; }
         public DelegateCommand NavigateToHomeCommand { get; set; }
         public DelegateCommand NavigateToBooksCommand { get; set; }
-        public DelegateCommand NavigateToAdminPanelCommand { get; set; }
+        public DelegateCommand NavigateToAdminViewCommand { get; set; }
 
         public DelegateCommand ExitCommand { get; set; }
 
@@ -69,6 +69,7 @@ namespace Bibliotheque.UI.ViewModels
             NavigateToHomeCommand = new(NavigateToHome);
             GoBackCommand = new(GoBack);
             NavigateToProfileCommand = new(NavigateToProfile);
+            NavigateToAdminViewCommand = new(NavigateToAdminView);
 
             ExitCommand = new(async () => await Exit());
 
@@ -128,6 +129,11 @@ namespace Bibliotheque.UI.ViewModels
             Navigate(ViewsEnum.HomeView);
         }
 
+        public void NavigateToAdminView()
+        {
+            Navigate(ViewsEnum.AdminView);
+        }
+
         /// <summary>
         /// Méthode de navigation qui prend en paramètre une vue de l'enum ViewsEnum et un dictionnaire pour les paramètres.
         /// Le dictionnaire prend comme Key un string représentant le nom de l'objet à transférer et Value l'objet en question.
@@ -138,7 +144,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.NavigationServiceName, m_NavigationService },
+                { GlobalInfos.NavigationService, m_NavigationService },
                 { GlobalInfos.ConnectionName, IsConnected },
                 { NavParameters.CurrentSessionParam, CurrentSession }
             };

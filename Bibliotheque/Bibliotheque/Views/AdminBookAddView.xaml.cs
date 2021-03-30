@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,16 @@ namespace Bibliotheque.UI.Views
         public AdminBookAddView()
         {
             InitializeComponent();
+        }
+
+        private void SelectFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new();
+            fileDialog.Filter = "Image File (*.jpg)|*.jpg|(*.jpeg)|*.jpeg|All files (*.*)|*.*";
+            if (fileDialog.ShowDialog() == true)
+            {
+                FilePath.Text = fileDialog.FileName;
+            }
         }
     }
 }

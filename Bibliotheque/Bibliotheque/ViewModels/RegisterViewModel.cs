@@ -516,7 +516,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
         }
 
         public bool PersistInHistory()

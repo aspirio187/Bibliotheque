@@ -24,6 +24,29 @@ namespace Bibliotheque.UI.Profiles
                     opt => opt.MapFrom(
                         src => src.Title))
                 .IgnoreAllPropertiesWithAnInaccessibleSetter();
+
+            CreateMap<BookEntity, BookAdminMiniatureModel>()
+                .ForMember(
+                    dest => dest.Image,
+                    opt => opt.MapFrom(
+                        src => Path.GetFullPath(src.Preface)))
+                .ForMember(
+                    dest => dest.Title,
+                    opt => opt.MapFrom(
+                        src => src.Title))
+                .IgnoreAllPropertiesWithAnInaccessibleSetter();
+
+            CreateMap<BookModel, BookEntity>()
+                .ForMember(
+                    dest => dest.Preface,
+                    opt => opt.MapFrom(
+                        src => src.PrefacePath));
+
+            CreateMap<BookEntity, BookModel>()
+                .ForMember(
+                    dest => dest.PrefacePath,
+                    opt => opt.MapFrom(
+                        src => src.Preface));
         }
     }
 }

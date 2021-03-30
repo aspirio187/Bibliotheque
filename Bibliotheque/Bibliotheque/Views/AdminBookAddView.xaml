@@ -12,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
@@ -21,28 +22,25 @@
             <StackPanel>
                 <!-- Title -->
                 <TextBlock Text="Titre :" Width="200" Margin="5" />
-                <TextBox Text="{Binding Title}" Width="200" Margin="5 0" />
+                <TextBox Text="{Binding Title, UpdateSourceTrigger=LostFocus}" Width="200" Margin="5 0" />
                 <!-- Author -->
                 <TextBlock Text="Auteur" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Authors}" SelectedItem="{Binding Author}" Width="200" Margin="5 0" IsEditable="True" />
+                <ComboBox ItemsSource="{Binding Authors}" SelectedItem="{Binding Author}" Text="{Binding Author}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Summary -->
                 <TextBlock Text="Résumé :" Width="200" Margin="5" />
-                <TextBox  Width="200" Height="200" Margin="5 0" 
+                <TextBox Text="{Binding Summary}" Width="200" Height="200" Margin="5 0" TextWrapping="Wrap"
                       AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
                 <!-- ReleaseDate -->
                 <TextBlock Text="Date de sortie :" Width="200" Margin="5" />
                 <DatePicker Width="200" SelectedDate="{Binding ReleaseDate}" Margin="5 0" />
-            </StackPanel>
-            <StackPanel>
                 <!-- Editor -->
                 <TextBlock Text="Editeur :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Editors}" SelectedItem="{Binding Editor}" Width="200" Margin="5 0" IsEditable="True" />
-                <!-- Collection -->
-                <TextBlock Text="Collection :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Collections}" SelectedItem="{Binding Collection}" Width="200" Margin="5 0" IsEditable="True" />
+                <ComboBox ItemsSource="{Binding Editors}" SelectedItem="{Binding Editor}" Width="200" Margin="5 0" IsEditable="True" Text="{Binding Editor}" />
+            </StackPanel>
+            <StackPanel>
                 <!-- Format -->
                 <TextBlock Text="Format :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" Width="200" Margin="5 0" IsEditable="True" />
+                <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" Text="{Binding Format}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Pages -->
                 <TextBlock Text="Pages :" Width="200" Margin="5" />
                 <TextBox Text="{Binding Pages}" Width="200" Margin="5 0" />
@@ -54,10 +52,15 @@
                 <TextBox Text="{Binding ISBN}" Width="200" Margin="5 0" />
                 <!-- Category -->
                 <TextBlock Text="Catégorie :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Width="200" Margin="5 0" IsEditable="True" />
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Text="{Binding NewCategory}" Width="200" Margin="5 0" IsEditable="True" />
                 <!-- Classification -->
                 <TextBlock Text="Genre :" Width="200" Margin="5" />
-                <ComboBox ItemsSource="{Binding Genres}" SelectedItem="{Binding Genre}" Width="200" Margin="5 0" IsEditable="True" />
+                <DockPanel Margin="5 0" >
+                    <ComboBox ItemsSource="{Binding Genres}" SelectedItem="{Binding Genre}" Text="{Binding NewGenre}" Width="180" IsEditable="True" />
+                    <Button Content="A" Width="20" Command="{Binding AddGenreToBookCommand}"/>
+                </DockPanel>
+                <ListBox Width="200" Height="80" Margin="5" ItemsSource="{Binding BookGenres}" SelectedItem="{Binding BookGenre}"/>
+                <Button Content="Supprimer" Width="200" Margin="5 0" Command="{Binding RemoveGenreFromBookCommand}"/>
             </StackPanel>
             <StackPanel>
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" Height="300">
@@ -65,12 +68,32 @@
                 </Border>
                 <TextBlock Text="Chemin :" Width="250" Margin="5 0"/>
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" >
-                    <TextBox Text="{Binding ImagePath}" />
+                    <TextBox x:Name="FilePath" Text="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}" />
                 </Border>
-                <Button Content="Ajouter" Width="250" />
+                <Button x:Name="SelectFile" Content="Sélectionner" Width="250" Click="SelectFile_Click" />
             </StackPanel>
         </DockPanel>
 
+        <StackPanel Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Width="auto" Margin="5" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Grid.Row="2" Height="auto" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+
         <Button Grid.Row="3" Content="Ajouter" Margin="5" Command="{Binding AddBookCommand}" />
+        <behavior:Interaction.Triggers>
+            <behavior:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+            </behavior:EventTrigger>
+        </behavior:Interaction.Triggers>
     </Grid>
 </ContentControl>

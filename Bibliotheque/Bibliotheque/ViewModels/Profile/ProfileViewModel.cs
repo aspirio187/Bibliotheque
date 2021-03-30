@@ -16,15 +16,6 @@ namespace Bibliotheque.UI.ViewModels
 {
     public class ProfileViewModel : BindableBase, INavigationAware, IJournalAware
     {
-        public enum ProfileViews
-        {
-            ProfileInformationsView,
-            ProfileAddressView,
-            ProfilePasswordView,
-            ProfileBorrowView,
-            ProfileHistoryView
-        }
-
         private readonly ILibraryRepository m_Repository;
         private readonly IMapper m_Mapper;
         private readonly IRegionManager m_Region;
@@ -68,32 +59,32 @@ namespace Bibliotheque.UI.ViewModels
 
         public void Load()
         {
-            Navigate(ProfileViews.ProfileInformationsView);
+            Navigate(ViewsEnum.ProfileInformationsView);
         }
 
         public void NavigateToProfileInformations()
         {
-            Navigate(ProfileViews.ProfileInformationsView);
+            Navigate(ViewsEnum.ProfileInformationsView);
         }
 
         public void NavigateToAddress()
         {
-            Navigate(ProfileViews.ProfileAddressView);
+            Navigate(ViewsEnum.ProfileAddressView);
         }
 
         public void NavigateToPassword()
         {
-            Navigate(ProfileViews.ProfilePasswordView);
+            Navigate(ViewsEnum.ProfilePasswordView);
         }
 
         public void NavigateToBorrows()
         {
-            Navigate(ProfileViews.ProfileBorrowView);
+            Navigate(ViewsEnum.ProfileBorrowView);
         }
 
         public void NavigateToHistory()
         {
-            Navigate(ProfileViews.ProfileHistoryView);
+            Navigate(ViewsEnum.ProfileHistoryView);
         }
 
         /// <summary>
@@ -110,7 +101,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { NavParameters.CurrentSessionParam, m_CurrentSession }
+                { GlobalInfos.CurrentSession, m_CurrentSession }
             };
 
             if (navigationParams != null)
@@ -134,7 +125,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
             if (m_CurrentSession == null) m_CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(NavParameters.CurrentSessionParam);
             if (m_CurrentSession == null)
             {

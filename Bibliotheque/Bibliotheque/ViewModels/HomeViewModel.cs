@@ -21,6 +21,7 @@ namespace Bibliotheque.UI.ViewModels
         private readonly IMapper m_Mapper;
 
         private IRegionNavigationService m_Navigation;
+        private RegionManager m_Region;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -51,6 +52,11 @@ namespace Bibliotheque.UI.ViewModels
             string fullPath = Path.GetFullPath(imagePath);
             ImagePath = fullPath;
 
+            Load();
+        }
+
+        public void Load()
+        {
             LastAddedBooks = new(m_Mapper.Map<IEnumerable<BookMiniatureModel>>(m_Repository.GetLastBooks()));
         }
 
@@ -66,7 +72,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
         }
     }
 }

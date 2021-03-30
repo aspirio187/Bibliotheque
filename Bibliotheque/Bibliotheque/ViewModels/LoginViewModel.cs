@@ -151,13 +151,13 @@ namespace Bibliotheque.UI.ViewModels
             if (m_Navigation == null) throw new ArgumentNullException(nameof(m_Navigation));
             IsRelevant = true;
             var parameters = new NavigationParameters();
-            parameters.Add(GlobalInfos.NavigationServiceName, m_Navigation);
+            parameters.Add(GlobalInfos.NavigationService, m_Navigation);
             m_Navigation.RequestNavigate(new Uri(GlobalInfos.RegisterView, UriKind.Relative), parameters);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationServiceName);
+            if (m_Navigation == null) m_Navigation = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

@@ -19,9 +19,11 @@ namespace Bibliotheque.EntityFramework.Entities
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
+        [MinLength(2)]
         public string Author { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [MinLength(50)]
         public string Summary { get; set; }
 
         public DateTime ReleaseDate { get; set; }
@@ -49,7 +51,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [MaxLength(500)]
         public string Preface { get; set; }
 
-        public ICollection<GenreEntity> Genres = new List<GenreEntity>();
+        public ICollection<BookGenreEntity> Genres;
 
         // Propriétés références
         [ForeignKey("CategoryId")]

@@ -13,6 +13,9 @@ namespace Bibliotheque.EntityFramework.Entities
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(35)]
+        [MinLength(5)]
         public string Name { get; set; }
+
+        public ICollection<BookGenreEntity> Books;
     }
 }
