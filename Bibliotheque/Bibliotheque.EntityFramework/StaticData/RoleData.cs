@@ -29,6 +29,26 @@ namespace Bibliotheque.EntityFramework.StaticData
         };
 
         /// <summary>
+        /// Vérifie l'existence du role donné en paramètre dans le tableau static et constant des Roles
+        /// </summary>
+        /// <param name="role">Chaine de caractère représentant le role</param>
+        /// <returns>
+        /// true Si le role donné existe bien dans le tableau. false Dans le cas contraire
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Si la chaine paramètre est null
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Si la chaine en paramètre vide
+        /// </exception>
+        public static bool RoleExist(string role)
+        {
+            if (role is null) throw new ArgumentNullException(nameof(role));
+            if (role.Length < 1) throw new ArgumentException($"The parameter {nameof(role)} is empty");
+            return Roles.Contains(role);
+        }
+
+        /// <summary>
         /// Récupère le role en chaine de caractère depuis le tableau
         /// privé de Roles. L'élement de l'enum sert d'indice
         /// </summary>
@@ -44,13 +64,10 @@ namespace Bibliotheque.EntityFramework.StaticData
         /// <returns>Le role dans l'enum RolesEnum</returns>
         public static RolesEnum GetRole(string role)
         {
-            role = role.Trim().ToLower();
-            if (string.IsNullOrEmpty(role))
-                throw new ArgumentNullException(nameof(role));
-
+            if (role is null) throw new ArgumentNullException(nameof(role));
+            if (role.Length < 1) throw new ArgumentException($"The parameter role is empty : {nameof(role)}");
             int roleIndex = Array.IndexOf(Roles, role);
-            if (roleIndex < 0)
-                throw new ArgumentException(nameof(role));
+            if (roleIndex < 0) throw new IndexOutOfRangeException($"The parameter {nameof(role)} does not exists in the array : {nameof(Roles)}");
             return (RolesEnum)roleIndex;
         }
     }

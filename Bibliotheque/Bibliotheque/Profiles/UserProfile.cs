@@ -41,15 +41,11 @@ namespace Bibliotheque.UI.Profiles
                     opt => opt.MapFrom(
                         src => new DateTimeOffset(src.BirthDate)));
 
-            CreateMap<UserEntity, UserForUpdateModel>()
+            CreateMap<UserEntity, UserAdminModel>()
                 .ForMember(
-                    dest => dest.Gender,
+                    dest => dest.FullName,
                     opt => opt.MapFrom(
-                        src => new GenderRecord(src.Gender)))
-                .ForMember(
-                    dest => dest.BirthDate,
-                    opt => opt.MapFrom(
-                        src => src.BirthDate.DateTime));
+                        src => $"{src.FirstName} {src.LastName}"));
         }
     }
 }

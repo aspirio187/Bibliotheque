@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.Helpers
 {
+    // TODO : Commenter le code
     public static class StringExtension
     {
         public static string FirstCharToUpper(this string input) => input switch
@@ -28,19 +29,6 @@ namespace Bibliotheque.UI.Helpers
             return stringBuilder.ToString();
         }
 
-        // TODO : supprimer la présentation
-        // Jean-Charles Lemonnier
-        // seperator = { ' ', '-' }
-        // 1er parcours :
-        // output = jean-charles lemonnier
-        // vs = { jean-charles, lemonnier }
-        // vs = { Jean-charles Lemonnier }
-        // output = Jean-charles Lemonnier
-        // 2ème parcours :
-        // output = Jean-charles Lemonnier
-        // vs = { Jean, charles Lemonnier }
-        // vs = { Jean, Charles lemonnier }
-        // output = Jean-Charles Lemonnier
         public static string FirstCharToUpperForAll(this string input, char[] seperator)
         {
             string output = input;

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.Models
 {
-    public record GenderRecord(string Name)
+    public class BorrowModel : Model<int, BorrowModel, BorrowModel.Properties>
     {
-        public override string ToString()
+        public enum Properties
         {
-            return $"{Name}";
+            Book,
+            StartDate,
+            EndDate
         }
     }
 }

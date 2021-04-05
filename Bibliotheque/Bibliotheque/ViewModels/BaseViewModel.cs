@@ -2,6 +2,7 @@
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -31,8 +32,14 @@ namespace Bibliotheque.UI.ViewModels
 
         protected IRegionNavigationService m_NavigationService;
 
-        public UserCurrentSessionRecord CurrentSession { get; protected set; }
+        public UserSessionModel CurrentSession { get; protected set; }
         public bool IsConnected { get; private set; }
+
+        /***************************************************/
+        /********* Commandes s'appliquant à la vue *********/
+        /***************************************************/
+
+        public DelegateCommand LoadCommand { get; set; }
 
         /********************************************************************/
         /****************** Collections relatives à la vue ******************/
@@ -62,6 +69,16 @@ namespace Bibliotheque.UI.ViewModels
                 throw new ArgumentNullException(nameof(mapper));
 
             Errors = new();
+        }
+
+        public virtual async Task LoadAsync()
+        {
+
+        }
+
+        public virtual void Load()
+        {
+
         }
 
         public virtual void CheckError(string property, string errorMessage, bool result)
@@ -131,7 +148,7 @@ namespace Bibliotheque.UI.ViewModels
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (m_NavigationService is null) m_NavigationService = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserCurrentSessionRecord>(GlobalInfos.CurrentSession);
+            if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserSessionModel>(GlobalInfos.CurrentSession);
         }
 
         public virtual bool PersistInHistory()

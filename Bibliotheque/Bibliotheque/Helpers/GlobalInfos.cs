@@ -32,6 +32,6 @@ namespace Bibliotheque.UI.Helpers
         AdminBooksView,
         AdminBookAddView,
         AdminBlackListView,
-        AdminModifyBookView
+        AdminBookModifyView
     }
 }

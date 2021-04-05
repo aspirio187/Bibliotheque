@@ -23,7 +23,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand NavigateToProfileInformationsCommand { get; set; }
         public DelegateCommand NavigateToAddressCommand { get; set; }
         public DelegateCommand NavigateToPasswordCommand { get; set; }
@@ -49,7 +48,7 @@ namespace Bibliotheque.UI.ViewModels
             NavigateToHistoryCommand = new(NavigateToHistory);
         }
 
-        public void Load()
+        public override void Load()
         {
             Navigate(ViewsEnum.ProfileInformationsView);
         }

@@ -24,7 +24,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand ModifyCommand { get; set; }
 
         /***************************************************/
@@ -128,14 +127,14 @@ namespace Bibliotheque.UI.ViewModels
         {
             Genders = new(GendersData.GetGenders());
 
-            LoadCommand = new(async () => await Load());
+            LoadCommand = new(async () => await LoadAsync());
             ModifyCommand = new(async () => await Modify());
         }
 
         /// <summary>
         /// Charge les données initiales à afficher
         /// </summary>
-        public async Task Load()
+        public override async Task LoadAsync()
         {
             User = m_Mapper.Map<UserModel>(await m_Repository.GetUserAsync(CurrentSession.Id));
             Gender = Genders.FirstOrDefault(x => x.Equals(User.Gender));

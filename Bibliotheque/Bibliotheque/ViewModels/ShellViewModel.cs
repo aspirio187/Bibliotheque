@@ -28,7 +28,7 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
 
         public bool IsConnected { get; set; }
-        public UserCurrentSessionRecord CurrentSession { get; set; }
+        public UserSessionModel CurrentSession { get; set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -81,7 +81,7 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (File.Exists(GlobalInfos.UserSessionPath))
             {
-                CurrentSession = await LocalFileHelper.ReadJsonFile<UserCurrentSessionRecord>(GlobalInfos.UserSessionPath);
+                CurrentSession = await LocalFileHelper.ReadJsonFile<UserSessionModel>(GlobalInfos.UserSessionPath);
                 if (CurrentSession is not null)
                 {
                     if (!await m_Repository.UserTokenHasChanged(CurrentSession.Id, CurrentSession.Token))

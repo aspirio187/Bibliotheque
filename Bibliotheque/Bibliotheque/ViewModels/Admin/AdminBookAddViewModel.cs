@@ -26,7 +26,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand AddBookCommand { get; set; }
         public DelegateCommand AddGenreToBookCommand { get; set; }
         public DelegateCommand RemoveGenreFromBookCommand { get; set; }
@@ -286,13 +285,13 @@ namespace Bibliotheque.UI.ViewModels
             : base(repository, mapper)
         {
             // Chargement des commandes
-            LoadCommand = new(async () => await Load());
+            LoadCommand = new(async () => await LoadAsync());
             AddBookCommand = new(async () => await AddBook());
             AddGenreToBookCommand = new(AddGenreToBook);
             RemoveGenreFromBookCommand = new(RemoveGenreFromBook);
         }
 
-        public async Task Load()
+        public override async Task LoadAsync()
         {
             var books = await m_Repository.GetBooksAsync();
             Authors = new(books.Select(p => p.Author));

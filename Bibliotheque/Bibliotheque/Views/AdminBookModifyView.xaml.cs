@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Module1.Views
+namespace Bibliotheque.UI.Views
 {
     /// <summary>
-    /// Interaction logic for ViewA.xaml
+    /// Logique d'interaction pour AdminBookModifyView.xaml
     /// </summary>
-    public partial class ViewA : UserControl
+    public partial class AdminBookModifyView : ContentControl
     {
-        public ViewA()
+        public AdminBookModifyView()
         {
             InitializeComponent();
         }
