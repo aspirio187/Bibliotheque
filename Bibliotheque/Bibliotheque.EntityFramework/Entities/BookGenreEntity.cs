@@ -9,8 +9,6 @@ namespace Bibliotheque.EntityFramework.Entities
 {
     public class BookGenreEntity
     {
-        public int Id { get; set; }
-
         [ForeignKey("BookId")]
         public BookEntity Book { get; set; }
         public int BookId { get; set; }

@@ -41,7 +41,8 @@
                                     <TextBlock Text="{Binding Title}" Margin="2"/>
                                 </Border>
                                 <Button Content="Modifier" Margin="5" 
-                                    Command="{Binding NavigateToModifyBookViewCommand}" CommandParameter="{Binding Id}" />
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=ContentControl}, Path=DataContext.NavigateToAdminModifyBookViewCommand}" 
+                                        CommandParameter="{Binding Id}" />
                             </StackPanel>
                         </Border>
                     </DataTemplate>

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Entities;
 using Bibliotheque.EntityFramework.Services.Repositories;
-using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
-using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
@@ -18,18 +16,21 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.UI.ViewModels
 {
-    public class AdminBookAddViewModel : BaseViewModel
+    public class AdminBookModifyViewModel : BaseViewModel
     {
-        private IRegionManager m_Region;
-        private BookModel Book;
+        public BookModel Book { get; set; }
+        public int BookId { get; set; }
+        public List<BookStateModel> DeletedStates { get; set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand AddBookCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand AddGenreToBookCommand { get; set; }
         public DelegateCommand RemoveGenreFromBookCommand { get; set; }
+        public DelegateCommand AddStateToBookCommand { get; set; }
+        public DelegateCommand RemoveStateFromBookCommand { get; set; }
 
         /***************************************************/
         /********* Collections relatives à la vue **********/
@@ -82,11 +83,36 @@ namespace Bibliotheque.UI.ViewModels
             get => m_BookGenres;
             set => SetProperty(ref m_BookGenres, value);
         }
+
+        private ObservableCollection<string> m_States;
+
+        public ObservableCollection<string> States
+        {
+            get { return m_States; }
+            set { SetProperty(ref m_States, value); }
+        }
+
+        private ObservableCollection<BookStateModel> m_BookStates;
+
+        public ObservableCollection<BookStateModel> BookStates
+        {
+            get { return m_BookStates; }
+            set { SetProperty(ref m_BookStates, value); }
+        }
         #endregion
+
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
-        #region Propriétés de la vue
+        #region Propriétés dans la vue
+        private string m_Id;
+
+        public string Id
+        {
+            get { return m_Id; }
+            set { SetProperty(ref m_Id, value); }
+        }
+
         private string m_Title;
 
         public string Title
@@ -267,6 +293,31 @@ namespace Bibliotheque.UI.ViewModels
             set { SetProperty(ref m_BookGenre, value); }
         }
 
+        private string m_State;
+
+        public string State
+        {
+            get { return m_State; }
+            set { SetProperty(ref m_State, value); }
+        }
+
+        private string m_StateQuantity;
+
+        public string StateQuantity
+        {
+            get { return m_StateQuantity; }
+            set { SetProperty(ref m_StateQuantity, value); }
+        }
+
+        private BookStateModel m_BookState;
+
+        public BookStateModel BookState
+        {
+            get { return m_BookState; }
+            set { SetProperty(ref m_BookState, value); }
+        }
+
+
         private string m_ImagePath;
 
         public string ImagePath
@@ -281,54 +332,80 @@ namespace Bibliotheque.UI.ViewModels
         }
         #endregion
 
-        public AdminBookAddViewModel(ILibraryRepository repository, IMapper mapper)
+        public AdminBookModifyViewModel(ILibraryRepository repository, IMapper mapper)
             : base(repository, mapper)
         {
-            // Chargement des commandes
+            DeletedStates = new();
+
             LoadCommand = new(async () => await LoadAsync());
-            AddBookCommand = new(async () => await AddBook());
             AddGenreToBookCommand = new(AddGenreToBook);
             RemoveGenreFromBookCommand = new(RemoveGenreFromBook);
+            AddStateToBookCommand = new(AddStateToBook);
+            RemoveStateFromBookCommand = new(RemoveStateFromBook);
+            SaveCommand = new(async () => await Save());
         }
 
-        public override async Task LoadAsync()
+        public async Task Save()
         {
-            var books = await m_Repository.GetBooksAsync();
-            Authors = new(books.Select(p => p.Author));
-            Editors = new(books.Select(p => p.Editor));
-            Formats = new(books.Select(p => p.Format));
-            Categories = new(m_Mapper.Map<IEnumerable<CategoryModel>>(await m_Repository.GetCategoriesAsync()));
-            Genres = new(m_Mapper.Map<IEnumerable<GenreModel>>(await m_Repository.GetGenresAsync()));
-            BookGenres = new();
-            Errors = new();
-            Book = new();
-        }
-
-        public async Task AddBook()
-        {
-            bool genresValid = (BookGenres.Count >= 1);
+            bool genresValid = (BookGenres.Count > 0);
             CheckError("Genres", "Un livre doit avoir au moins un genre !", genresValid);
             bool bookValid = Book.IsValid();
             CheckError("Livre", "Un ou des champs du livres sont invalides !", bookValid);
-            if (genresValid == true && bookValid == true)
+            bool statesValid = (BookStates.Count > 0);
+            if (genresValid == true && bookValid == true && statesValid == true)
             {
-                string newPath = $"../../../Images/{Title}-{Editor}-{Format}.jpg";
+                Random rnd = new Random();
+                string newPath = $"../../../Images/{Title}-{Editor}-{Format}-{rnd.Next(0, 100)}.jpg";
                 File.Copy(ImagePath, newPath, true);
-                var bookToAdd = m_Mapper.Map<BookEntity>(Book);
-                bookToAdd.CategoryId = Category.Id;
-                bookToAdd.Preface = newPath;
-                m_Repository.AddBook(bookToAdd);
-                Debug.WriteLine(bookToAdd.Id);
-                List<BookGenreEntity> bookGenres = new();
+
+                var bookFromRepo = await m_Repository.GetBookAsync(Book.Id);
+                m_Mapper.Map(Book, bookFromRepo);
+                bookFromRepo.CategoryId = Category.Id;
+                bookFromRepo.Preface = newPath;
+
+                var bookGenresFromRepo = await m_Repository.GetBookGenreEntitiesAsync(bookFromRepo.Id);
+
                 foreach (var genre in BookGenres)
                 {
-                    bookGenres.Add(new BookGenreEntity()
+                    if (!bookGenresFromRepo.Any(x => x.BookId == bookFromRepo.Id && x.GenreId == genre.Id))
                     {
-                        Book = bookToAdd,
-                        Genre = genre.Id != 0 ? await m_Repository.GetGenreAsync(genre.Id) : m_Mapper.Map<GenreEntity>(genre)
-                    });
+                        bookGenresFromRepo.Add(new BookGenreEntity()
+                        {
+                            Book = bookFromRepo,
+                            Genre = m_Mapper.Map<GenreEntity>(genre)
+                        });
+                    }
                 }
-                bookToAdd.BookGenres = bookGenres;
+
+                foreach (var bookState in DeletedStates)
+                {
+                    var copy = await m_Repository.GetBookCopyAsync(bookState.Id);
+                    if (copy is not null)
+                    {
+                        m_Repository.DeleteBookCopy(copy);
+                    }
+                }
+
+                foreach (var bookState in BookStates)
+                {
+                    if (bookState.Id == 0)
+                    {
+                        BookCopyEntity bookCopy = new BookCopyEntity()
+                        {
+                            State = bookState.State,
+                            Quantity = (uint)bookState.Quantity,
+                            Book = bookFromRepo,
+                            BookId = bookFromRepo.Id
+                        };
+
+                        m_Repository.AddBookCopy(bookCopy);
+                    }
+                    else
+                    {
+                        var bookCopyFromRepo = await m_Repository.GetBookCopyAsync(bookState.Id);
+                        m_Mapper.Map(bookState, bookCopyFromRepo);
+                    }
+                }
                 await m_Repository.SaveAsync();
                 GoBack();
             }
@@ -336,10 +413,13 @@ namespace Bibliotheque.UI.ViewModels
 
         public void AddGenreToBook()
         {
-            if (Genre.IsValid() && !BookGenres.Contains(Genre))
+            if (Genre is not null)
             {
-                BookGenres.Add(Genre);
-                Genres.Remove(Genre);
+                if (!BookGenres.Any(x => x == Genre))
+                {
+                    BookGenres.Add(Genre);
+                    Genres.Remove(Genre);
+                }
             }
         }
 
@@ -352,20 +432,94 @@ namespace Bibliotheque.UI.ViewModels
             }
         }
 
-        public void NavigateBack()
+        public void AddStateToBook()
         {
-            Navigate(ViewsEnum.AdminBooksView);
+            if (!string.IsNullOrEmpty(State) && !string.IsNullOrEmpty(StateQuantity))
+            {
+                if (int.TryParse(StateQuantity, out int quantity))
+                {
+                    var state = BookStates.FirstOrDefault(x => x.State.Equals(State));
+                    if (state is null)
+                    {
+                        BookStates.Add(new BookStateModel()
+                        {
+                            State = State,
+                            Quantity = quantity
+                        });
+                    }
+                    else
+                    {
+                        BookStateModel newstate = state;
+                        newstate.Quantity = quantity;
+                        BookStates.Remove(state);
+                        BookStates.Add(newstate);
+                        BookStates.OrderBy(x => x.State);
+                    }
+                    StateQuantity = string.Empty;
+                }
+            }
+        }
+
+        public void RemoveStateFromBook()
+        {
+            if (BookState is not null)
+            {
+                if (BookState.Id != 0)
+                {
+                    DeletedStates.Add(BookState);
+                }
+                BookStates.Remove(BookState);
+            }
+        }
+
+        public override async Task LoadAsync()
+        {
+            var bookFromRepo = await m_Repository.GetBookAsync(BookId);
+            Book = m_Mapper.Map<BookModel>(bookFromRepo);
+            Book.Category = m_Mapper.Map<CategoryModel>(await m_Repository.GetCategoryAsync(bookFromRepo.CategoryId));
+            var books = await m_Repository.GetBooksAsync();
+            Authors = new(books.Select(p => p.Author));
+            Editors = new(books.Select(p => p.Editor));
+            Formats = new(books.Select(p => p.Format));
+            Categories = new(m_Mapper.Map<IEnumerable<CategoryModel>>(await m_Repository.GetCategoriesAsync()));
+            Genres = new(m_Mapper.Map<IEnumerable<GenreModel>>(await m_Repository.GetGenresAsync()));
+            BookGenres = new(m_Mapper.Map<IEnumerable<GenreModel>>(await m_Repository.GetBookGenresAsync(BookId)));
+            States = new(BookHelper.States);
+            var bookCopies = await m_Repository.GetBookCopiesAsync(BookId);
+            BookStates = new(m_Mapper.Map<IEnumerable<BookStateModel>>(bookCopies));
+            Errors = new();
+            LoadFields();
+        }
+
+        public void LoadFields()
+        {
+            Id = Book.Id.ToString();
+            Title = Book.Title;
+            Author = Authors.FirstOrDefault(x => x.Equals(Book.Author));
+            Summary = Book.Summary;
+            ReleaseDate = Book.ReleaseDate;
+            Editor = Editors.FirstOrDefault(x => x.Equals(Book.Editor));
+            Format = Formats.FirstOrDefault(x => x.Equals(Book.Format));
+            Pages = Book.Pages;
+            EAN = Book.EAN;
+            ISBN = Book.ISBN;
+            ImagePath = Path.GetFullPath(Book.PrefacePath);
+            Category = Categories.FirstOrDefault(x => x.Id == Book.Category.Id);
+
+            foreach (var bookGenre in BookGenres)
+            {
+                var genre = Genres.FirstOrDefault(g => g.Name.Equals(bookGenre.Name));
+                if (genre is not null)
+                {
+                    Genres.Remove(genre);
+                }
+            }
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-            if (m_Region is null) m_Region = navigationContext.Parameters.GetValue<IRegionManager>("AdminRegion");
-            if (CurrentSession is null)
-            {
-                GoBack();
-                m_NavigationService.Journal.Clear();
-            }
+            BookId = navigationContext.Parameters.GetValue<int>("BookId");
         }
     }
 }

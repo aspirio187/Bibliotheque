@@ -20,7 +20,7 @@ namespace Bibliotheque.UI.Helpers
 
     public static class BookHelper
     {
-        private static readonly string[] States =
+        public static readonly string[] States =
         {
             "Inutilisable",
             "Usage",

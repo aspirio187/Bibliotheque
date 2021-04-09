@@ -25,10 +25,9 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand SearchCommand { get; set; }
         public DelegateCommand DeleteSelectedBooksCommand { get; set; }
-        public DelegateCommand<object> NavigateToModifyBookViewCommand { get; set; }
+        public DelegateCommand<int?> NavigateToAdminModifyBookViewCommand { get; set; }
         public DelegateCommand NavigateToAdminBookAddViewCommand { get; set; }
 
         /***************************************************/
@@ -65,14 +64,14 @@ namespace Bibliotheque.UI.ViewModels
             m_Region = region ??
                 throw new ArgumentNullException(nameof(region));
 
-            LoadCommand = new(async () => await Load());
+            LoadCommand = new(async () => await LoadAsync());
             SearchCommand = new(async () => await Search());
             DeleteSelectedBooksCommand = new(async () => await DeleteSelectedBooks());
-            NavigateToModifyBookViewCommand = new DelegateCommand<object>(NavigateToAdminModifyBookView);
+            NavigateToAdminModifyBookViewCommand = new DelegateCommand<int?>(NavigateToAdminModifyBookView);
             NavigateToAdminBookAddViewCommand = new(NavigateToAdminAddBookView);
         }
 
-        public async Task Load()
+        public override async Task LoadAsync()
         {
             var books = await m_Repository.GetBooksAsync();
             Books = new(m_Mapper.Map<IEnumerable<BookAdminMiniatureModel>>(books));
@@ -103,11 +102,11 @@ namespace Bibliotheque.UI.ViewModels
             LoadCommand.Execute();
         }
 
-        public void NavigateToAdminModifyBookView(object id)
+        public void NavigateToAdminModifyBookView(int? id)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("BookId", (int)id);
-            Navigate(ViewsEnum.AdminModifyBookView, parameters);
+            parameters.Add("BookId", id);
+            Navigate(ViewsEnum.AdminBookModifyView, parameters);
         }
 
         public void NavigateToAdminAddBookView()

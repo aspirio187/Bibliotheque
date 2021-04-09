@@ -13,12 +13,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="Modification d'un livre" HorizontalContentAlignment="Center" FontSize="25"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="5">
             <StackPanel>
+                <!-- ID -->
+                <TextBlock Text="ID :" Width="200" Margin="5" />
+                <TextBox Text="{Binding Id, UpdateSourceTrigger=LostFocus}" Width="200" Margin="5 0" IsEnabled="False"/>
                 <!-- Title -->
                 <TextBlock Text="Titre :" Width="200" Margin="5" />
                 <TextBox Text="{Binding Title, UpdateSourceTrigger=LostFocus}" Width="200" Margin="5 0" />
@@ -35,11 +39,11 @@
                 <!-- Editor -->
                 <TextBlock Text="Editeur :" Width="200" Margin="5" />
                 <ComboBox ItemsSource="{Binding Editors}" SelectedItem="{Binding Editor}" Width="200" Margin="5 0" IsEditable="True" Text="{Binding Editor}" />
-            </StackPanel>
-            <StackPanel>
                 <!-- Format -->
                 <TextBlock Text="Format :" Width="200" Margin="5" />
                 <ComboBox ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" Text="{Binding Format}" Width="200" Margin="5 0" IsEditable="True" />
+            </StackPanel>
+            <StackPanel>
                 <!-- Pages -->
                 <TextBlock Text="Pages :" Width="200" Margin="5" />
                 <TextBox Text="{Binding Pages}" Width="200" Margin="5 0" />
@@ -64,15 +68,16 @@
                 <TextBlock Text="Etat :" Width="200" Margin="5" />
                 <DockPanel Margin="5 0" >
                     <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding State}" Width="140" IsEditable="True" />
-                    <TextBox Text="{Binding StateQuantity}" Width="40" />
-                    <Button Content="A" Width="20" Command="{Binding AddStateCommand}"/>
+                    <TextBox x:Name="BookStateCopyQuantity" Text="{Binding StateQuantity}" Width="40" 
+                             PreviewTextInput="BookStateCopyQuantity_PreviewTextInput"  />
+                    <Button Content="A" Width="20" Command="{Binding AddStateToBookCommand}"/>
                 </DockPanel>
                 <ListBox Width="200" Height="80" Margin="5" ItemsSource="{Binding BookStates}" SelectedItem="{Binding BookState}"/>
                 <Button Content="Supprimer" Width="200" Margin="5 0" Command="{Binding RemoveStateFromBookCommand}"/>
             </StackPanel>
             <StackPanel>
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" Height="300">
-                    <Image Source="{Binding ImagePath}"/>
+                    <Image x:Name="Preface" Source="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}"/>
                 </Border>
                 <TextBlock Text="Chemin :" Width="250" Margin="5 0"/>
                 <Border BorderThickness="1" BorderBrush="Black" Margin="5" Width="250" >
@@ -81,5 +86,13 @@
                 <Button x:Name="SelectFile" Content="Sélectionner" Width="250" Click="SelectFile_Click" />
             </StackPanel>
         </StackPanel>
+
+        <Button Content="Sauvegarder" Command="{Binding SaveCommand}" Grid.Row="2" Margin="0 5"/>
+
+        <behavior:Interaction.Triggers>
+            <behavior:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}" />
+            </behavior:EventTrigger>
+        </behavior:Interaction.Triggers>
     </Grid>
 </ContentControl>

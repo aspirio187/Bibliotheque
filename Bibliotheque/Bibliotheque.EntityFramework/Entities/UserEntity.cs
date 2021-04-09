@@ -37,7 +37,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [MinLength(2)]
         public string LastName { get; set; }
 
-        public DateTimeOffset BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [StringLength(5)]
@@ -56,5 +56,9 @@ namespace Bibliotheque.EntityFramework.Entities
         [ForeignKey("RoleId")]
         public RoleEntity Role { get; set; }
         public Guid RoleId { get; set; }
+
+        [ForeignKey("AddressId")]
+        public AddressEntity Address { get; set; }
+        public Guid AddressId { get; set; }
     }
 }

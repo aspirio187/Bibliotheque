@@ -30,8 +30,6 @@ namespace Bibliotheque.EntityFramework.Entities
         [StringLength(4)]
         public string ZipCode { get; set; }
 
-        [ForeignKey("UserId")]
         public UserEntity User { get; set; }
-        public Guid UserId { get; set; }
     }
 }

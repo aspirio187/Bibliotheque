@@ -21,7 +21,8 @@ namespace Bibliotheque.UI.Models
             EAN,
             ISBN,
             PrefacePath,
-            Category
+            Category,
+            Genres
         }
         /***********************************************************/
         /************************ Propriétés ***********************/
@@ -343,5 +344,7 @@ namespace Bibliotheque.UI.Models
             m_Category = newValue;
             return ChangeResult<CategoryModel>.Succeded(this, Properties.Category, initialValue, newValue);
         }
+
+        public IEnumerable<GenreModel> Genres { get; set; }
     }
 }

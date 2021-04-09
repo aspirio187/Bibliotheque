@@ -16,7 +16,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> EmailExistsAsync(string email);
         Task<bool> UserIsBlackListed(Guid userId);
         Task<bool> UserTokenHasChanged(Guid userId, Guid token);
-        void AddUser(UserEntity user, AddressEntity address);
+        void AddUser(UserEntity user);
         Task<IEnumerable<UserEntity>> GetUsersAsync();
         Task<UserEntity> GetUserAsync(Guid userId);
         void DeleteUser(UserEntity user);
@@ -95,23 +95,22 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         /// une exception
         /// </summary>
         /// <param name="user">Entité User à ajouter</param>
-        public void AddUser(UserEntity user, AddressEntity address)
+        public void AddUser(UserEntity user)
         {
             // Vérifie si l'entité utilisateur en paramètre est null
             if (user == null) throw new ArgumentNullException(nameof(user));
             // Récupère le role utilisateur pour le nouvel utilisateur
             user.Role = m_Context.Roles.FirstOrDefault(x => x.Name.Equals(RoleData.GetRole(RolesEnum.User)));
             // Vérifie si le role est null
-            if (user.Role == null) throw new ArgumentNullException(nameof(user.Role));
+            if (user.Role is null) throw new ArgumentNullException(nameof(user.Role));
             // Crée un ID à l'utilisateur
             user.Id = Guid.NewGuid();
             // Crée un nouveau Token pour l'utilisateur
             user.Token = Guid.NewGuid();
-            // Ajout de l'addresse à l'utilisateur
-            address.UserId = user.Id;
+            //// Ajout de l'addresse à l'utilisateur
+            //address.UserId = user.Id;
             // Ajoute l'utilisateur au contexte
-            m_Context.Entry(user).State = EntityState.Added;
-            m_Context.Entry(address).State = EntityState.Added;
+            m_Context.Users.Add(user);
         }
 
         /// <summary>

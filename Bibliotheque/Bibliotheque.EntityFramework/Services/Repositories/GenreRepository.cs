@@ -12,6 +12,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
     {
         Task<bool> GenreExistsAsync(int genreId);
         Task<IEnumerable<GenreEntity>> GetGenresAsync();
+        Task<List<BookGenreEntity>> GetBookGenreEntitiesAsync(int bookId);
         Task<IEnumerable<GenreEntity>> GetBookGenresAsync(int bookId);
         Task<GenreEntity> GetGenreAsync(int genreId);
         void AddGenre(GenreEntity genre);
@@ -30,10 +31,15 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             return await m_Context.Genres.ToListAsync();
         }
 
+        public async Task<List<BookGenreEntity>> GetBookGenreEntitiesAsync(int bookId)
+        {
+            return await m_Context.BookGenres.Where(bg => bg.BookId == bookId).ToListAsync();
+        }
+
         public async Task<IEnumerable<GenreEntity>> GetBookGenresAsync(int bookId)
         {
-            var genres = await m_Context.Genres.ToListAsync();
-            return genres.Where(x => x.Books.Any(x => x.BookId == bookId));
+            var bookGenres = m_Context.BookGenres.Where(b => b.BookId == bookId).Select(x => x.Genre);
+            return await bookGenres.ToListAsync();
         }
 
         public async Task<GenreEntity> GetGenreAsync(int genreId)

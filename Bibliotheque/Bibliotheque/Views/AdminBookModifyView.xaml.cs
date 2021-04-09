@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +26,23 @@ namespace Bibliotheque.UI.Views
         public AdminBookModifyView()
         {
             InitializeComponent();
+        }
+
+        private void BookStateCopyQuantity_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void SelectFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new();
+            fileDialog.Filter = "Image File (*.jpg)|*.jpg|(*.jpeg)|*.jpeg|All files (*.*)|*.*";
+            if (fileDialog.ShowDialog() == true)
+            {
+
+                FilePath.Text = fileDialog.FileName;
+            }
         }
     }
 }

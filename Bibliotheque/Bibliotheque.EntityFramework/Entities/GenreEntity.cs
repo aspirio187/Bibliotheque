@@ -16,6 +16,6 @@ namespace Bibliotheque.EntityFramework.Entities
         [MinLength(5)]
         public string Name { get; set; }
 
-        public ICollection<BookGenreEntity> Books;
+        public IList<BookGenreEntity> BookGenres { get; set; }
     }
 }

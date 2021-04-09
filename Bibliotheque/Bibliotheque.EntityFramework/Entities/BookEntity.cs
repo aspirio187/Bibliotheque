@@ -51,7 +51,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [MaxLength(500)]
         public string Preface { get; set; }
 
-        public ICollection<BookGenreEntity> Genres;
+        public IList<BookGenreEntity> BookGenres { get; set; }
 
         // Propriétés références
         [ForeignKey("CategoryId")]

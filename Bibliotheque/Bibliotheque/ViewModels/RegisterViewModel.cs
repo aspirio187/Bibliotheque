@@ -245,27 +245,25 @@ namespace Bibliotheque.UI.ViewModels
         /// </summary>
         public async Task Register()
         {
+            var result = UserRegistration.DefineAddress(Address);
+            CheckError(result.Property.ToString(), result.ErrorMessage, result.Success);
             if (UserRegistration.IsValid())
             {
-                var result = UserRegistration.DefineAddress(Address);
-                if (result.Success)
+                var userToCreate = m_Mapper.Map<UserEntity>(UserRegistration);
+                if (userToCreate is null)
                 {
-                    var userToCreate = m_Mapper.Map<UserEntity>(UserRegistration);
-                    if (userToCreate is null)
-                    {
-                        Debug.WriteLine($"User couldn't be mapped : {userToCreate}");
-                        return;
-                    }
-                    var addressToCreate = m_Mapper.Map<AddressEntity>(Address);
-                    if (addressToCreate is null)
-                    {
-                        Debug.WriteLine($"Address couldn't be mapped : {addressToCreate}");
-                        return;
-                    }
-                    m_Repository.AddUser(userToCreate, addressToCreate);
-                    await m_Repository.SaveAsync();
-                    GoBack();
+                    Debug.WriteLine($"User couldn't be mapped : {userToCreate}");
+                    return;
                 }
+                //var addressToCreate = m_Mapper.Map<AddressEntity>(Address);
+                //if (addressToCreate is null)
+                //{
+                //    Debug.WriteLine($"Address couldn't be mapped : {addressToCreate}");
+                //    return;
+                //}
+                m_Repository.AddUser(userToCreate);
+                await m_Repository.SaveAsync();
+                GoBack();
             }
         }
     }

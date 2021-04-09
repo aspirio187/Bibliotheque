@@ -63,36 +63,20 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
 
         public async Task<BookEntity> GetBookAsync(int bookId)
         {
-            return await m_Context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
+            var book = await m_Context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
+            return book;
         }
 
         public void AddBook(BookEntity book)
         {
             m_Context.ChangeTracker.AutoDetectChangesEnabled = true;
             if (book is null) throw new ArgumentNullException(nameof(book));
-            //m_Context.Books.Add(book);
-            m_Context.Entry(book).State = EntityState.Added;
-            if(book.CategoryId == 0)
-            {
-                m_Context.Entry(book.Category).State = EntityState.Added;
-            }
-            foreach (var genre in book.Genres)
-            {
-                if (m_Context.BooksGenres.Any(x => x.Id == genre.Id))
-                {
-                    var genreToUpdate = m_Context.BooksGenres.FirstOrDefault(x => x.Id == genre.Id);
-                    genreToUpdate = genre;
-                }
-                else
-                {
-                    m_Context.Entry(genre).State = EntityState.Added;
-                    if (genre.GenreId == 0)
-                    {
-                        m_Context.Entry(genre.Genre).State = EntityState.Added;
-                    }
-                    //m_Context.BooksGenres.Add(genre);
-                }
-            }
+            m_Context.Books.Add(book);
+            //m_Context.Entry(book).State = EntityState.Added;
+            //if (book.CategoryId == 0)
+            //{
+            //    m_Context.Entry(book.Category).State = EntityState.Added;
+            //}
         }
 
         public void DeleteBook(BookEntity book)

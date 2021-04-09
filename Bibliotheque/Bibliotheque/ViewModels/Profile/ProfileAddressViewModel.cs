@@ -24,7 +24,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand ModifyCommand { get; set; }
 
         /***************************************************/
@@ -92,11 +91,11 @@ namespace Bibliotheque.UI.ViewModels
         public ProfileAddressViewModel(ILibraryRepository repository, IMapper mapper)
             : base(repository, mapper)
         {
-            LoadCommand = new(async () => await Load());
+            LoadCommand = new(async () => await LoadAsync());
             ModifyCommand = new(async () => await Modify());
         }
 
-        public async Task Load()
+        public override async Task LoadAsync()
         {
             Address = m_Mapper.Map<AddressModel>(await m_Repository.GetUserAddress(CurrentSession.Id));
             Street = Address.Street;

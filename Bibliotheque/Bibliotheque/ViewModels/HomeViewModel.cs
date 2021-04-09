@@ -21,7 +21,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand<object> NavigateToBookDetailCommand { get; set; }
 
         /***************************************************/
@@ -48,7 +47,7 @@ namespace Bibliotheque.UI.ViewModels
             Load();
         }
 
-        public void Load()
+        public override void Load()
         {
             LastAddedBooks = new(m_Mapper.Map<IEnumerable<BookMiniatureModel>>(m_Repository.GetLastBooks()));
         }

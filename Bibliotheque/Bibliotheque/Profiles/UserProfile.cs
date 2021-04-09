@@ -29,17 +29,13 @@ namespace Bibliotheque.UI.Profiles
 
             CreateMap<UserConnection, LoginRequest>().ReverseMap();
 
-            CreateMap<UserEntity, UserModel>()
-                .ForMember(
-                    dest => dest.BirthDate,
-                    opt => opt.MapFrom(
-                        src => src.BirthDate.UtcDateTime));
+            CreateMap<UserEntity, UserModel>();
 
             CreateMap<UserModel, UserEntity>()
                 .ForMember(
                     dest => dest.BirthDate,
                     opt => opt.MapFrom(
-                        src => new DateTimeOffset(src.BirthDate)));
+                        src =>src.BirthDate));
 
             CreateMap<UserEntity, UserAdminModel>()
                 .ForMember(

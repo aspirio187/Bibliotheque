@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bibliotheque.EntityFramework.Entities
 {
-    public class CategoryEntity 
+    public class CategoryEntity
     {
         public int Id { get; set; }
 
@@ -15,5 +15,7 @@ namespace Bibliotheque.EntityFramework.Entities
         [MaxLength(30)]
         [MinLength(5)]
         public string Name { get; set; }
+
+        public ICollection<BookEntity> Books { get; set; }
     }
 }

@@ -23,7 +23,6 @@ namespace Bibliotheque.UI.ViewModels
         /********* Commandes s'appliquant à la vue *********/
         /***************************************************/
 
-        public DelegateCommand LoadCommand { get; set; }
         public DelegateCommand NavigateToAdminBooksCommand { get; set; }
         public DelegateCommand NavigateToAdminUsersCommand { get; set; }
         public DelegateCommand NavigateToAdminBlackListCommand { get; set; }
@@ -40,7 +39,7 @@ namespace Bibliotheque.UI.ViewModels
             NavigateToAdminBlackListCommand = new(NavigateToAdminBlackList);
         }
 
-        public void Load()
+        public override void Load()
         {
             NavigateToAdminBooks();
         }
