@@ -72,11 +72,6 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             m_Context.ChangeTracker.AutoDetectChangesEnabled = true;
             if (book is null) throw new ArgumentNullException(nameof(book));
             m_Context.Books.Add(book);
-            //m_Context.Entry(book).State = EntityState.Added;
-            //if (book.CategoryId == 0)
-            //{
-            //    m_Context.Entry(book.Category).State = EntityState.Added;
-            //}
         }
 
         public void DeleteBook(BookEntity book)
@@ -91,6 +86,8 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             {
                 var genres = m_Context.Genres.Where(x => m_Context.BookGenres.Any(bg => bg.GenreId == x.Id && bg.BookId != book.Id) == false);
                 m_Context.Genres.RemoveRange(genres);
+                var categories = m_Context.Categories.Where(x => m_Context.Books.Any(b => b.CategoryId == x.Id && b.Id != book.Id) == false);
+                m_Context.Categories.RemoveRange(categories);
             }
             m_Context.Books.RemoveRange(books);
         }

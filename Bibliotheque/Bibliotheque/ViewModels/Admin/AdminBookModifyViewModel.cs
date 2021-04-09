@@ -355,8 +355,12 @@ namespace Bibliotheque.UI.ViewModels
             if (genresValid == true && bookValid == true && statesValid == true)
             {
                 Random rnd = new Random();
-                string newPath = $"../../../Images/{Title}-{Editor}-{Format}-{rnd.Next(0, 100)}.jpg";
-                File.Copy(ImagePath, newPath, true);
+                string newPath = $"../../../Images/{Title}-{rnd.Next(0, 100)}.jpg";
+                try
+                {
+                    File.Copy(ImagePath, newPath, true);
+                }
+                catch (Exception) { }
 
                 var bookFromRepo = await m_Repository.GetBookAsync(Book.Id);
                 m_Mapper.Map(Book, bookFromRepo);

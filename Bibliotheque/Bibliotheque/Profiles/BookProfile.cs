@@ -47,6 +47,8 @@ namespace Bibliotheque.UI.Profiles
                     dest => dest.PrefacePath,
                     opt => opt.MapFrom(
                         src => src.Preface));
+
+            CreateMap<BookCopyEntity, BookStateModel>().ReverseMap();
         }
     }
 }

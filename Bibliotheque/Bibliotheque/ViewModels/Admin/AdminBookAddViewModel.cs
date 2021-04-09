@@ -312,13 +312,20 @@ namespace Bibliotheque.UI.ViewModels
             CheckError("Livre", "Un ou des champs du livres sont invalides !", bookValid);
             if (genresValid == true && bookValid == true)
             {
-                string newPath = $"../../../Images/{Title}-{Editor}-{Format}.jpg";
+                // Génère un nouveau nom à l'image composé d'un nombre aléatoire pour éviter les doublons en cas de titres similaires
+                Random rnd = new Random();
+                string newPath = $"../../../Images/{Title}-{rnd.Next(0, 999)}.jpg";
+                // Déplacer le fichier dans le dossier de l'application
                 File.Copy(ImagePath, newPath, true);
+
                 var bookToAdd = m_Mapper.Map<BookEntity>(Book);
-                bookToAdd.CategoryId = Category.Id;
+                if (Category.Id != 0)
+                {
+                    bookToAdd.Category = await m_Repository.GetCategoryAsync(Category.Id);
+                    bookToAdd.CategoryId = Category.Id;
+                }
                 bookToAdd.Preface = newPath;
                 m_Repository.AddBook(bookToAdd);
-                Debug.WriteLine(bookToAdd.Id);
                 List<BookGenreEntity> bookGenres = new();
                 foreach (var genre in BookGenres)
                 {
@@ -330,6 +337,7 @@ namespace Bibliotheque.UI.ViewModels
                 }
                 bookToAdd.BookGenres = bookGenres;
                 await m_Repository.SaveAsync();
+                Clear();
                 GoBack();
             }
         }
@@ -350,6 +358,23 @@ namespace Bibliotheque.UI.ViewModels
                 Genres.Add(BookGenre);
                 BookGenres.Remove(BookGenre);
             }
+        }
+
+        public void Clear()
+        {
+            Title = string.Empty;
+            Author = string.Empty;
+            Summary = string.Empty;
+            ReleaseDate = DateTime.MinValue;
+            Editor = string.Empty;
+            Format = string.Empty;
+            Pages = 0;
+            EAN = string.Empty;
+            ISBN = string.Empty;
+            Category = null;
+            Genre = null;
+            BookGenres = new();
+            ImagePath = string.Empty;
         }
 
         public void NavigateBack()
