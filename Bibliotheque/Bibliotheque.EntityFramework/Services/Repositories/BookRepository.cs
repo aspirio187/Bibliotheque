@@ -87,6 +87,11 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
 
         public void DeleteBooks(IEnumerable<BookEntity> books)
         {
+            foreach (var book in books)
+            {
+                var genres = m_Context.Genres.Where(x => m_Context.BookGenres.Any(bg => bg.GenreId == x.Id && bg.BookId != book.Id) == false);
+                m_Context.Genres.RemoveRange(genres);
+            }
             m_Context.Books.RemoveRange(books);
         }
     }
