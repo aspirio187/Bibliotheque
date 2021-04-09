@@ -40,7 +40,8 @@ namespace Bibliotheque.UI.ViewModels
 
         public override async Task LoadAsync()
         {
-            Users = new(m_Mapper.Map<IEnumerable<UserAdminModel>>(await m_Repository.GetUsersAsync()));
+            Users = new(m_Mapper.Map<IEnumerable<UserAdminModel>>(await m_Repository.GetUsersAsync(true, true)));
+
         }
     }
 }

@@ -19,10 +19,10 @@
         <Label Content="Utilisateurs" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Margin="5"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0 5">
-            <Button Content="Black lister/Authoriser" Command="{Binding BlackListCommand}" />
+            <Button Content="Black lister/Authoriser" Command="{Binding BlackListCommand}" Margin="5"/>
         </StackPanel>
 
-        <DataGrid ItemsSource="{Binding Users}" Grid.Row="2" Margin="0 5">
+        <DataGrid ItemsSource="{Binding Users}" Grid.Row="2" Margin="0 5" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Sélect." Binding="{Binding Selected}"/>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" />

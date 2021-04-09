@@ -12,6 +12,7 @@ namespace Bibliotheque.UI.Models
     {
         public enum Properties
         {
+            Selected,
             FullName,
             FullAddress,
             PhoneNumber,
@@ -19,6 +20,8 @@ namespace Bibliotheque.UI.Models
             BorrowQuantity,
             Role
         }
+
+        public bool Selected { get; set; } = false;
 
         private string m_FullName;
 

@@ -17,7 +17,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> UserIsBlackListed(Guid userId);
         Task<bool> UserTokenHasChanged(Guid userId, Guid token);
         void AddUser(UserEntity user);
-        Task<IEnumerable<UserEntity>> GetUsersAsync();
+        Task<IEnumerable<UserEntity>> GetUsersAsync(bool loadAddress = false, bool loadRole = false);
         Task<UserEntity> GetUserAsync(Guid userId);
         void DeleteUser(UserEntity user);
     }
@@ -119,9 +119,24 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         /// <returns>
         /// IEnumerable des entités UserEntity
         /// </returns>
-        public async Task<IEnumerable<UserEntity>> GetUsersAsync()
+        public async Task<IEnumerable<UserEntity>> GetUsersAsync(bool loadAddress = false, bool loadRole = false)
         {
-            return await m_Context.Users.ToListAsync();
+            if (loadAddress == true && loadRole == true)
+            {
+                return await m_Context.Users.Include(u => u.Address).Include(u => u.Role).ToListAsync();
+            }
+            else if (loadAddress == true)
+            {
+                return await m_Context.Users.Include(u => u.Address).ToListAsync();
+            }
+            else if (loadRole == true)
+            {
+                return await m_Context.Users.Include(u => u.Role).ToListAsync();
+            }
+            else
+            {
+                return await m_Context.Users.ToListAsync();
+            }
         }
 
         /// <summary>

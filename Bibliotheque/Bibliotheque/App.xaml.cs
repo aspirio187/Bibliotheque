@@ -44,6 +44,7 @@ namespace Bibliotheque
             containerRegistry.RegisterForNavigation<AdminBooksView>();
             containerRegistry.RegisterForNavigation<AdminBookAddView>();
             containerRegistry.RegisterForNavigation<AdminBookModifyView>();
+            containerRegistry.RegisterForNavigation<AdminUsersView>();
         }
 
         private IMapper InitAutoMapper()

@@ -375,6 +375,7 @@ namespace Bibliotheque.UI.ViewModels
             Genre = null;
             BookGenres = new();
             ImagePath = string.Empty;
+            Genre = null;
         }
 
         public void NavigateBack()
