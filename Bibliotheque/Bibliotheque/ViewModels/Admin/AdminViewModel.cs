@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.EntityFramework.StaticData;
 using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
@@ -68,7 +69,7 @@ namespace Bibliotheque.UI.ViewModels
                 { GlobalInfos.NavigationService, m_NavigationService },
                 { m_RegionName, m_Region }
             };
-           
+
             if (navigationParams != null)
             {
                 foreach (var navigationParam in navigationParams)
@@ -82,10 +83,14 @@ namespace Bibliotheque.UI.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-            if (CurrentSession == null)
+            if (CurrentSession is null)
             {
-                GoBack();
+                Navigate(ViewsEnum.HomeView);
                 m_NavigationService.Journal.Clear();
+            }
+            else
+            {
+                RolesEnum userRole = Task.Run(() => m_Repository.GetUserRole(CurrentSession.Id)).Result;
             }
         }
     }

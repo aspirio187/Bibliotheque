@@ -263,8 +263,25 @@ namespace Bibliotheque.UI.ViewModels
                 //}
                 m_Repository.AddUser(userToCreate);
                 await m_Repository.SaveAsync();
+                Clear();
                 GoBack();
             }
+        }
+
+        public void Clear()
+        {
+            Email = string.Empty;
+            EmailConfirmation = string.Empty;
+            Password = string.Empty;
+            PasswordConfirmation = string.Empty;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            BirthDate = DateTime.MinValue;
+            Street = string.Empty;
+            Appartment = string.Empty;
+            ZipCode = string.Empty;
+            City = string.Empty;
+            PhoneNumber = string.Empty;
         }
     }
 }

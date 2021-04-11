@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.EntityFramework.StaticData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
@@ -34,6 +35,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public UserSessionModel CurrentSession { get; protected set; }
         public bool IsConnected { get; private set; }
+        public RolesEnum AuthorizedRole { get; protected set; }
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/

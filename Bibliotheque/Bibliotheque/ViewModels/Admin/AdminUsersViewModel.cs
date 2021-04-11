@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Bibliotheque.EntityFramework.Entities;
 using Bibliotheque.EntityFramework.Services.Repositories;
 using Bibliotheque.EntityFramework.StaticData;
+using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
 using Prism.Commands;
 using System;
@@ -17,6 +19,9 @@ namespace Bibliotheque.UI.ViewModels
         public enum FiltersEnum
         {
             Users,
+            Moderators,
+            Admins,
+            SuperAdmins,
             Blackliste,
             Autorise,
         }
@@ -26,6 +31,7 @@ namespace Bibliotheque.UI.ViewModels
 
         public DelegateCommand BlackListCommand { get; set; }
         public DelegateCommand AuthorizeCommand { get; set; }
+        public DelegateCommand SearchCommand { get; set; }
         public DelegateCommand AuthorizeModificationCommand { get; set; }
         public DelegateCommand SaveCommand { get; set; }
 
@@ -60,7 +66,7 @@ namespace Bibliotheque.UI.ViewModels
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
         #region Propriétés dans la vue      
-        private bool m_UserModification;
+        private bool m_UserModification = true;
 
         public bool UserModification
         {
@@ -68,23 +74,32 @@ namespace Bibliotheque.UI.ViewModels
             set { SetProperty(ref m_UserModification, value); }
         }
 
-        private string m_Filter;
+        private FiltersEnum m_Filter;
 
-        public string Filter
+        public FiltersEnum Filter
         {
             get { return m_Filter; }
             set
             {
+                Task.Run(() => FilterUsers(value));
                 SetProperty(ref m_Filter, value);
             }
         }
 
-        private DateTime m_EndBlackList;
+        private DateTime m_EndBlackList = DateTime.Now;
 
         public DateTime EndBlackList
         {
             get { return m_EndBlackList; }
             set { SetProperty(ref m_EndBlackList, value); }
+        }
+
+        private string m_SearchText;
+
+        public string SearchText
+        {
+            get { return m_SearchText; }
+            set { SetProperty(ref m_SearchText, value); }
         }
         #endregion
 
@@ -101,9 +116,37 @@ namespace Bibliotheque.UI.ViewModels
 
             BlackListCommand = new(async () => await BlackList());
             AuthorizeCommand = new(async () => await Authorize());
+            SearchCommand = new(async () => await Search());
             AuthorizeModificationCommand = new(AuthorizeModification);
+            SaveCommand = new(async () => await Save());
             LoadCommand = new(async () => await LoadAsync());
 
+        }
+
+        public async Task FilterUsers(FiltersEnum filter)
+        {
+            await LoadAsync();
+            switch (filter)
+            {
+                case FiltersEnum.Users:
+                    Users = new(Users.Where(u => u.Role.Equals(RolesEnum.User.ToString())));
+                    break;
+                case FiltersEnum.Moderators:
+                    Users = new(Users.Where(u => u.Role.Equals(RolesEnum.Moderator.ToString())));
+                    break;
+                case FiltersEnum.Admins:
+                    Users = new(Users.Where(u => u.Role.Equals(RolesEnum.Admin.ToString())));
+                    break;
+                case FiltersEnum.SuperAdmins:
+                    Users = new(Users.Where(u => u.Role.Equals(RolesEnum.SuperAdmin.ToString())));
+                    break;
+                case FiltersEnum.Blackliste:
+                    Users = new(Users.Where(u => u.BlackListed == true));
+                    break;
+                case FiltersEnum.Autorise:
+                    Users = new(Users.Where(u => u.BlackListed == false));
+                    break;
+            }
         }
 
         public async Task BlackList()
@@ -127,6 +170,7 @@ namespace Bibliotheque.UI.ViewModels
                     }
                 }
                 await m_Repository.SaveAsync();
+                LoadCommand.Execute();
             }
         }
 
@@ -134,24 +178,33 @@ namespace Bibliotheque.UI.ViewModels
         {
             foreach (var user in Users)
             {
-                if (user.BlackListed)
+                if (user.BlackListed && user.Selected)
                 {
                     m_Repository.AuthorizeUser(user.Id);
                 }
             }
             await m_Repository.SaveAsync();
+            LoadCommand.Execute();
+        }
+
+        public async Task Search()
+        {
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                await LoadAsync();
+                Users = new(Users.Where(
+                    u => u.FirstName.ToLower().Contains(SearchText.ToLower()) ||
+                        u.LastName.ToLower().Contains(SearchText.ToLower()) ||
+                        u.PhoneNumber.ToLower().Contains(SearchText.ToLower()) ||
+                        u.FullAddress.ToLower().Contains(SearchText.ToLower()) ||
+                        u.FullCity.ToLower().Contains(SearchText.ToLower()) ||
+                        u.Email.ToLower().Contains(SearchText.ToLower())));
+            }
         }
 
         public void AuthorizeModification()
         {
-            if (UserModification == true)
-            {
-                UserModification = false;
-            }
-            else
-            {
-                UserModification = true;
-            }
+            UserModification = !UserModification;
         }
 
         public async Task Save()
@@ -161,6 +214,30 @@ namespace Bibliotheque.UI.ViewModels
                 if (user.IsValid())
                 {
                     var userFromRepo = await m_Repository.GetUserAsync(user.Id);
+                    var userRole = await m_Repository.GetRole(user.Role);
+                    if (userRole is not null)
+                    {
+                        userFromRepo.RoleId = userRole.Id;
+                        userFromRepo.Role = userRole;
+                    }
+
+                    var userAddress = await m_Repository.GetUserAddress(user.Id);
+                    if (userAddress is not null)
+                    {
+                        string[] streetAppart = user.FullAddress.Split('-');
+                        string[] cityZip = user.FullCity.Split('-');
+                        if (streetAppart.Length != 2 || cityZip.Length != 2) break;
+                        AddressModel address = new()
+                        {
+                            Id = userAddress.Id,
+                            Street = streetAppart[0],
+                            Appartment = streetAppart[1],
+                            City = cityZip[0],
+                            ZipCode = cityZip[1]
+                        };
+                        m_Mapper.Map(address, userAddress);
+                        userFromRepo.AddressId = userAddress.Id;
+                    }
                     m_Mapper.Map(user, userFromRepo);
                 }
             }

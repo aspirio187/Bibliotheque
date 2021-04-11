@@ -1,4 +1,5 @@
 ﻿using Bibliotheque.EntityFramework.Entities;
+using Bibliotheque.EntityFramework.StaticData;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> RoleExists(Guid roleId);
         Task<RoleEntity> GetRole(string roleName);
         Task<RoleEntity> GetRole(Guid roleId);
+        Task<RolesEnum> GetUserRole(Guid userId);
     }
 
     // TODO : Vérifier s'il est utile de lancer des exception depuis le repository si on ne trouve pas le role
@@ -67,6 +69,15 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             var role = await m_Context.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
             if (role == null) throw new ArgumentNullException(nameof(role));
             return role;
+        }
+
+        public async Task<RolesEnum> GetUserRole(Guid userId)
+        {
+            if (userId == Guid.Empty) throw new ArgumentNullException(nameof(userId));
+            var user = await m_Context.Users.Include(u => u.Role).FirstOrDefaultAsync(x => x.Id == userId);
+            if (user is null) throw new NullReferenceException(nameof(user));
+            if (user.Role is null) throw new NullReferenceException(nameof(user.Role));
+            return RoleData.GetRole(user.Role.Name);
         }
     }
 }

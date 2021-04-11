@@ -135,7 +135,7 @@ namespace Bibliotheque.UI.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-            if (CurrentSession == null)
+            if (CurrentSession is null)
             {
                 m_NavigationService.Journal.GoBack();
                 m_NavigationService.Journal.Clear();

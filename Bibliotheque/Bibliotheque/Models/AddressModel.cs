@@ -112,7 +112,7 @@ namespace Bibliotheque.UI.Models
         public string ZipCode
         {
             get { return m_ZipCode; }
-            set { m_ZipCode = value; }
+            set { DefineZipCode(value); }
         }
 
         public ChangeResult<string> DefineZipCode(string newValue)

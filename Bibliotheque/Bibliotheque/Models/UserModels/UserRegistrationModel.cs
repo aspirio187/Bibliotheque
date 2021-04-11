@@ -50,10 +50,6 @@ namespace Bibliotheque.UI.Models
             {
                 return ChangeResult<string>.Failed(this, Properties.Email, "L'adresse email doit faire au plus 100 caractères !", m_Email, newValue);
             }
-            else if (!string.IsNullOrEmpty(EmailConfirmation) && !newValue.Equals(EmailConfirmation))
-            {
-                return ChangeResult<string>.Failed(this, Properties.Email, "L'adresse email est différente de l'adresse email de confirmation !", m_Email, newValue);
-            }
 
             newValue = newValue.ToLower();
             var initialValue = m_Email;

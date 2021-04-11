@@ -9,6 +9,11 @@
             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <ContentControl.Resources>
+        <CollectionViewSource x:Key="Roles" Source="{Binding Roles}" />
+    </ContentControl.Resources>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -21,9 +26,13 @@
         <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0 5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
                 <TextBlock Text="Date de fin :" Margin="5" TextAlignment="Center" VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding EndDate}" Margin="5" Width="200"/>
+                <DatePicker SelectedDate="{Binding EndBlackList}" Margin="5" Width="200"/>
                 <Button Content="Interdire utilisateur(s)" Command="{Binding BlackListCommand}" Margin="5" Width="200"/>
                 <Button Content="Autoriser utilisateur(s)" Command="{Binding AuthorizeCommand}" Margin="5" Width="200"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding SearchText}" MinWidth="500" Width="500"/>
+                <Button Content="Rechercher" Width="150" Command="{Binding SearchCommand}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Filtrer :" TextAlignment="Center" VerticalAlignment="Center" Margin="5" />
@@ -35,14 +44,16 @@
 
         <DataGrid ItemsSource="{Binding Users}" Grid.Row="2" Margin="0 5" AutoGenerateColumns="False" IsReadOnly="{Binding UserModification}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="Sélect." Binding="{Binding Selected}"/>
+                <DataGridCheckBoxColumn Header="Sélect." Binding="{Binding Selected}" IsReadOnly="False"/>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Nom Prénom" Binding="{Binding FullName}" />
-                <DataGridTextColumn Header="Adresse" Binding="{Binding FullAddress}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="Nom" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="Adresse" Binding="{Binding FullAddress}" />
+                <DataGridTextColumn Header="Ville" Binding="{Binding FullCity}" />
                 <DataGridTextColumn Header="Téléphone" Binding="{Binding PhoneNumber}" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Emprunts" Binding="{Binding BorrowQuantity}" />
-                <DataGridComboBoxColumn Header="Role" SelectedItemBinding="{Binding Role}" ItemsSource="{Binding Roles}"/>
+                <DataGridTextColumn Header="Emprunts" Binding="{Binding BorrowQuantity}" IsReadOnly="True"/>
+                <DataGridComboBoxColumn Header="Role" SelectedItemBinding="{Binding Role}" ItemsSource="{Binding Source={StaticResource Roles}}"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>

@@ -14,8 +14,10 @@ namespace Bibliotheque.UI.Models
         {
             Selected,
             BlackListed,
-            FullName,
+            FirstName,
+            LastName,
             FullAddress,
+            FullCity,
             PhoneNumber,
             Email,
             BorrowQuantity,
@@ -26,34 +28,64 @@ namespace Bibliotheque.UI.Models
 
         public bool BlackListed { get; set; } = false;
 
-        private string m_FullName;
+        private string m_FirstName;
 
-        public string FullName
+        public string FirstName
         {
-            get { return m_FullName; }
-            set { DefineFullName(value); }
+            get { return m_FirstName; }
+            set { DefineFirstName(value); }
         }
 
-        public ChangeResult<string> DefineFullName(string newValue)
+        public ChangeResult<string> DefineFirstName(string newValue)
         {
             if (newValue is null)
             {
-                return ChangeResult<string>.Failed(this, Properties.FullName, "Le nom et le prénom sont requis !", m_FullName, newValue);
+                return ChangeResult<string>.Failed(this, Properties.FirstName, "Le prénom est requis !", m_FirstName, newValue);
             }
 
             newValue = newValue.Trim();
-            if (newValue.Length < 4)
+            if (newValue.Length < 2)
             {
-                return ChangeResult<string>.Failed(this, Properties.FullName, "L'ensemble nom et prénom doit faire au moins 4 caractères !", m_FullName, newValue);
+                return ChangeResult<string>.Failed(this, Properties.FirstName, "Le prénom doit faire au moins 2 caractères !", m_FirstName, newValue);
             }
-            else if (newValue.Length > 100)
+            else if (newValue.Length > 50)
             {
-                return ChangeResult<string>.Failed(this, Properties.FullName, "L'ensemble nom et prénom doit faire au plus 100 caractères !", m_FullName, newValue);
+                return ChangeResult<string>.Failed(this, Properties.FirstName, "Le prénom doit faire au plus 50 caractères !", m_FirstName, newValue);
             }
 
-            var initialValue = m_FullName;
-            m_FullName = newValue;
-            return ChangeResult<string>.Succeded(this, Properties.FullName, initialValue, newValue);
+            var initialValue = m_FirstName;
+            m_FirstName = newValue;
+            return ChangeResult<string>.Succeded(this, Properties.FirstName, initialValue, newValue);
+        }
+
+        private string m_LastName;
+
+        public string LastName
+        {
+            get { return m_LastName; }
+            set { DefineLastName(value); }
+        }
+
+        public ChangeResult<string> DefineLastName(string newValue)
+        {
+            if (newValue is null)
+            {
+                return ChangeResult<string>.Failed(this, Properties.LastName, "Le nom de famille est requis !", m_LastName, newValue);
+            }
+
+            newValue = newValue.Trim();
+            if (newValue.Length < 2)
+            {
+                return ChangeResult<string>.Failed(this, Properties.LastName, "Le nom de famille doit faire au moins 2 caractères !", m_LastName, newValue);
+            }
+            else if (newValue.Length > 50)
+            {
+                return ChangeResult<string>.Failed(this, Properties.LastName, "Le nom de famille doit faire au plus 50 caractères !", m_LastName, newValue);
+            }
+
+            var initialValue = m_LastName;
+            m_LastName = newValue;
+            return ChangeResult<string>.Succeded(this, Properties.LastName, initialValue, newValue);
         }
 
         private string m_FullAddress;
@@ -72,18 +104,48 @@ namespace Bibliotheque.UI.Models
             }
 
             newValue = newValue.Trim();
-            if (newValue.Length < 11)
+            if (newValue.Length < 4)
             {
-                return ChangeResult<string>.Failed(this, Properties.FullAddress, "L'adresse complète doit faire au moins 11 caractères !", m_FullAddress, newValue);
+                return ChangeResult<string>.Failed(this, Properties.FullAddress, "L'adresse complète doit faire au moins 4 caractères !", m_FullAddress, newValue);
             }
-            else if (newValue.Length > 157)
+            else if (newValue.Length > 103)
             {
-                return ChangeResult<string>.Failed(this, Properties.FullAddress, "L'addresse complète doit faire au plus 157 caractères !", m_FullAddress, newValue);
+                return ChangeResult<string>.Failed(this, Properties.FullAddress, "L'addresse complète doit faire au plus 103 caractères !", m_FullAddress, newValue);
             }
 
             var initialValue = m_FullAddress;
             m_FullAddress = newValue;
             return ChangeResult<string>.Succeded(this, Properties.FullAddress, initialValue, newValue);
+        }
+
+        private string m_FullCity;
+
+        public string FullCity
+        {
+            get { return m_FullCity; }
+            set { DefineFullCity(value); }
+        }
+
+        public ChangeResult<string> DefineFullCity(string newValue)
+        {
+            if (newValue is null)
+            {
+                return ChangeResult<string>.Failed(this, Properties.FullCity, "La ville et le code postal sont requis !", m_FullCity, FullCity);
+            }
+
+            newValue = newValue.Trim();
+            if (newValue.Length < 7)
+            {
+                return ChangeResult<string>.Failed(this, Properties.FullCity, "La ville et le code postal doivent faire au moins 7 caractères ensembles !", m_FullCity, newValue);
+            }
+            else if (newValue.Length > 54)
+            {
+                return ChangeResult<string>.Failed(this, Properties.FullCity, "La ville et le code postal doivent faire au plus 54 caractères ensembles !", m_FullCity, newValue);
+            }
+
+            var initialValue = m_FullCity;
+            m_FullCity = newValue;
+            return ChangeResult<string>.Succeded(this, Properties.FullCity, initialValue, newValue);
         }
 
         private string m_PhoneNumber;

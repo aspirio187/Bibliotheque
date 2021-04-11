@@ -39,17 +39,32 @@ namespace Bibliotheque.UI.Profiles
 
             CreateMap<UserEntity, UserAdminModel>()
                 .ForMember(
-                    dest => dest.FullName,
-                    opt => opt.MapFrom(
-                        src => $"{src.FirstName} {src.LastName}"))
-                .ForMember(
                     dest => dest.FullAddress,
                     opt => opt.MapFrom(
-                        src => $"{src.Address.Street} {src.Address.Appartment} | {src.Address.ZipCode} - {src.Address.City}"))
+                        src => $"{src.Address.Street} - {src.Address.Appartment}"))
+                .ForMember(
+                    dest => dest.FullCity,
+                    opt => opt.MapFrom(
+                        src => $"{src.Address.City} - {src.Address.ZipCode}"))
                 .ForMember(
                     dest => dest.Role,
                     opt => opt.MapFrom(
                         src => $"{src.Role.Name}"));
+
+            CreateMap<UserAdminModel, UserEntity>()
+                .ForMember(
+                    dest => dest.FirstName,
+                    opt => opt.MapFrom(
+                        src => src.FirstName))
+                .ForMember(
+                    dest => dest.LastName,
+                    opt => opt.MapFrom(
+                        src => src.LastName))
+                .ForMember(
+                    dest => dest.PhoneNumber,
+                    opt => opt.MapFrom(
+                        src => src.PhoneNumber))
+                .ForAllOtherMembers(x => x.Ignore());
         }
     }
 }
