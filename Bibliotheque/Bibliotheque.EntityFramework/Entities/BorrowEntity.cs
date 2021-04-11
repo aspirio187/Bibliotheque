@@ -17,8 +17,6 @@ namespace Bibliotheque.EntityFramework.Entities
 
         public DateTime DeliveryDate { get; set; }
 
-        public int Quantity { get; set; }
-
         [Column(TypeName = "decimal(2,0)")]
         public decimal ExtraCharges { get; set; }
 

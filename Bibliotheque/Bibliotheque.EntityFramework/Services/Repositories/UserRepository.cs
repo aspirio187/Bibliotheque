@@ -20,6 +20,10 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<IEnumerable<UserEntity>> GetUsersAsync(bool loadAddress = false, bool loadRole = false);
         Task<UserEntity> GetUserAsync(Guid userId);
         void DeleteUser(UserEntity user);
+
+        void BlackListUser(Guid userId, DateTime endDate);
+        void AuthorizeUser(Guid userId);
+        Task<BlackListedEntity> GetBlackList(Guid userId);
     }
 
     // TODO : Ajouter les tags d'exception dans les commentaires
@@ -164,6 +168,34 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
             m_Context.Users.Remove(user);
+        }
+
+        public void BlackListUser(Guid userId, DateTime endDate)
+        {
+            m_Context.BlackListeds.Add(new BlackListedEntity()
+            {
+                StartDate = DateTime.Now,
+                EndDate = endDate,
+                UserId = userId
+            });
+        }
+
+        public void AuthorizeUser(Guid userId)
+        {
+            var blackList = m_Context.BlackListeds.FirstOrDefault(x => x.UserId == userId);
+            if (blackList is not null)
+            {
+                m_Context.BlackListeds.Remove(blackList);
+            }
+            else
+            {
+                throw new ArgumentException($"There is no blacklisted user with this ID : {userId}");
+            }
+        }
+
+        public async Task<BlackListedEntity> GetBlackList(Guid userId)
+        {
+            return await m_Context.BlackListeds.FirstOrDefaultAsync(x => x.UserId == userId);
         }
     }
 }

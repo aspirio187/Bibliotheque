@@ -13,15 +13,18 @@ namespace Bibliotheque.UI.Models
         public enum Properties
         {
             Selected,
+            BlackListed,
             FullName,
             FullAddress,
             PhoneNumber,
             Email,
             BorrowQuantity,
-            Role
+            Role,
         }
 
         public bool Selected { get; set; } = false;
+
+        public bool BlackListed { get; set; } = false;
 
         private string m_FullName;
 

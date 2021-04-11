@@ -16,11 +16,6 @@ namespace Bibliotheque.EntityFramework.Entities
 
         public DateTimeOffset EndDate { get; set; }
 
-        [Required(AllowEmptyStrings = false)]
-        [MaxLength(100)]
-        [MinLength(5)]
-        public string Reason { get; set; }
-
         [ForeignKey("UserId")]
         public UserEntity User { get; set; }
         public Guid UserId { get; set; }
