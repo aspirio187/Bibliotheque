@@ -39,6 +39,8 @@ namespace Bibliotheque.UI.ViewModels
             m_Region = region ??
                 throw new ArgumentNullException(nameof(region));
 
+            PublicAuthorized = false;
+
             // Déclarations des commandes
             LoadCommand = new(Load);
             NavigateToProfileInformationsCommand = new(NavigateToProfileInformations);

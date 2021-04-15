@@ -46,10 +46,10 @@
                 <TextBox Text="{Binding Pages}" Width="200" Margin="5 0" />
                 <!-- EAN -->
                 <TextBlock Text="EAN : (optionnel)" Width="200" Margin="5" />
-                <TextBox Text="{Binding EAN}" Width="200" Margin="5 0" />
+                <TextBox x:Name="ean" Text="{Binding EAN}" Width="200" Margin="5 0" PreviewTextInput="Digit_PreviewTextInput" />
                 <!-- ISBN -->
                 <TextBlock Text="ISBN" Width="200" Margin="5" />
-                <TextBox Text="{Binding ISBN}" Width="200" Margin="5 0" />
+                <TextBox x:Name="isbn" Text="{Binding ISBN}" Width="200" Margin="5 0" PreviewTextInput="Digit_PreviewTextInput" />
                 <!-- Category -->
                 <TextBlock Text="Catégorie :" Width="200" Margin="5" />
                 <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Text="{Binding NewCategory}" Width="200" Margin="5 0" IsEditable="True" />

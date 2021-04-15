@@ -1,4 +1,5 @@
 ﻿using Bibliotheque.EntityFramework.Services.Repositories;
+using Bibliotheque.EntityFramework.StaticData;
 using Bibliotheque.UI.DefaultData;
 using Bibliotheque.UI.Helpers;
 using Bibliotheque.UI.Models;
@@ -45,6 +46,14 @@ namespace Bibliotheque.UI.ViewModels
         /***************************************************/
         /******** Propriétés récupérées dans la vue ********/
         /***************************************************/
+        private int m_Administration;
+
+        public int Administration
+        {
+            get { return m_Administration; }
+            set { SetProperty(ref m_Administration, value); }
+        }
+
 
         public ShellViewModel(IRegionManager regionManager, IRegionNavigationService navigationService, ILibraryRepository repository)
         {
@@ -60,6 +69,7 @@ namespace Bibliotheque.UI.ViewModels
             // Initialisation des commandes
             LoadCommand = new(Load);
             NavigateToHomeCommand = new(NavigateToHome);
+            NavigateToBooksCommand = new(NavigateToBooks);
             GoBackCommand = new(GoBack);
             NavigateToProfileCommand = new(NavigateToProfile);
             NavigateToAdminViewCommand = new(NavigateToAdminView);
@@ -88,6 +98,12 @@ namespace Bibliotheque.UI.ViewModels
                         IsConnected = true;
                     else
                         File.Delete(GlobalInfos.UserSessionPath);
+
+                    var role = await m_Repository.GetUserRole(CurrentSession.Id);
+                    if (role >= RolesEnum.Moderator)
+                    {
+                        Administration = 150;
+                    }
                 }
             }
         }
@@ -104,6 +120,7 @@ namespace Bibliotheque.UI.ViewModels
         /// </summary>
         public void NavigateToProfile()
         {
+            Task.Run(UserIsConnected).Wait();
             if (IsConnected)
             {
                 Navigate(ViewsEnum.ProfileView);
@@ -122,8 +139,14 @@ namespace Bibliotheque.UI.ViewModels
             Navigate(ViewsEnum.HomeView);
         }
 
+        public void NavigateToBooks()
+        {
+            Navigate(ViewsEnum.BooksView);
+        }
+
         public void NavigateToAdminView()
         {
+            //TODO : Vérifier le role de l'utilisateur
             Navigate(ViewsEnum.AdminView);
         }
 

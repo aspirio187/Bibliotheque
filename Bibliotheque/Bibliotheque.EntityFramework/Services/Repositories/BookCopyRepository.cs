@@ -13,6 +13,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         Task<bool> BookCopyExistAsync(int bookCopyId);
         Task<IEnumerable<BookCopyEntity>> GetBookCopiesAsync();
         Task<IEnumerable<BookCopyEntity>> GetBookCopiesAsync(int bookId);
+        Task<IEnumerable<BookCopyEntity>> GetAvalaibleBookCopies(int bookId);
         Task<BookCopyEntity> GetBookCopyAsync(int bookCopyId);
         void AddBookCopy(BookCopyEntity bookCopy);
         void DeleteBookCopy(BookCopyEntity bookCopy);
@@ -34,6 +35,21 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
         public async Task<IEnumerable<BookCopyEntity>> GetBookCopiesAsync(int bookId)
         {
             return await m_Context.BookCopies.Where(x => x.BookId == bookId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<BookCopyEntity>> GetAvalaibleBookCopies(int bookId)
+        {
+            var copies = await m_Context.BookCopies.Where(c => c.BookId == bookId).ToListAsync();
+            var borrows = m_Context.Borrows.AsEnumerable().Where(b => copies.Any(c => c.Id == b.BookCopyId)).ToList();
+            foreach (var borrow in borrows)
+            {
+                var copy = copies.FirstOrDefault(c => c.Id == borrow.BookCopyId);
+                if (copy is not null)
+                {
+                    if (copy.Quantity > 0) copy.Quantity--;
+                }
+            }
+            return copies;
         }
 
         public async Task<BookCopyEntity> GetBookCopyAsync(int bookCopyId)

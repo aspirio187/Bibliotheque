@@ -53,18 +53,14 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
 
         public async Task<IEnumerable<BookEntity>> GetBooksAsync()
         {
-            var books = await m_Context.Books.ToListAsync();
-            foreach (var book in books)
-            {
-                await m_Context.Entry(book).Reference(x => x.Category).LoadAsync();
-            }
-            return books;
+            return await m_Context.Books.Include(b => b.Category).Include(b => b.BookGenres).ToListAsync();
         }
-
         public async Task<BookEntity> GetBookAsync(int bookId)
         {
-            var book = await m_Context.Books.FirstOrDefaultAsync(x => x.Id == bookId);
-            return book;
+            return await m_Context.Books
+                .Include(b => b.Category)
+                .Include(b => b.BookGenres)
+                .FirstOrDefaultAsync(x => x.Id == bookId);
         }
 
         public void AddBook(BookEntity book)

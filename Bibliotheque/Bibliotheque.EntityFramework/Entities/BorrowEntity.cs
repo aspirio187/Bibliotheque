@@ -15,9 +15,9 @@ namespace Bibliotheque.EntityFramework.Entities
 
         public DateTime ExpectedDeliveryDate { get; set; }
 
-        public DateTime DeliveryDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
 
-        [Column(TypeName = "decimal(2,0)")]
+        [Column(TypeName = "decimal(4,2)")]
         public decimal ExtraCharges { get; set; }
 
         [ForeignKey("UserId")]

@@ -252,13 +252,5 @@ namespace Bibliotheque.UI.Models
             m_Role = newValue;
             return ChangeResult<string>.Succeded(this, Properties.Role, initialValue, newValue);
         }
-
-        private IEnumerable<BorrowModel> m_Borrows;
-
-        public IEnumerable<BorrowModel> Borrows
-        {
-            get { return m_Borrows; }
-            set { m_Borrows = value; }
-        }
     }
 }

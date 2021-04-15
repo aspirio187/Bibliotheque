@@ -35,6 +35,9 @@ namespace Bibliotheque
             containerRegistry.RegisterForNavigation<LoginView>();
             containerRegistry.RegisterForNavigation<RegisterView>();
             containerRegistry.RegisterForNavigation<HomeView>();
+            containerRegistry.RegisterForNavigation<BooksView>();
+            containerRegistry.RegisterForNavigation<BookDetailsView>();
+
             containerRegistry.RegisterForNavigation<ProfileView>();
             containerRegistry.RegisterForNavigation<ProfileInformationsView>();
             containerRegistry.RegisterForNavigation<ProfileAddressView>();

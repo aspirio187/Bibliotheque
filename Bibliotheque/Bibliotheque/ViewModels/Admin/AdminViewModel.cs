@@ -26,7 +26,6 @@ namespace Bibliotheque.UI.ViewModels
 
         public DelegateCommand NavigateToAdminBooksCommand { get; set; }
         public DelegateCommand NavigateToAdminUsersCommand { get; set; }
-        public DelegateCommand NavigateToAdminBlackListCommand { get; set; }
 
         public AdminViewModel(ILibraryRepository repository, IMapper mapper, IRegionManager region)
             : base(repository, mapper)
@@ -37,7 +36,6 @@ namespace Bibliotheque.UI.ViewModels
             LoadCommand = new(Load);
             NavigateToAdminBooksCommand = new(NavigateToAdminBooks);
             NavigateToAdminUsersCommand = new(NavigateToAdminUsers);
-            NavigateToAdminBlackListCommand = new(NavigateToAdminBlackList);
         }
 
         public override void Load()
@@ -54,12 +52,6 @@ namespace Bibliotheque.UI.ViewModels
         {
             Navigate(ViewsEnum.AdminUsersView);
         }
-
-        public void NavigateToAdminBlackList()
-        {
-            Navigate(ViewsEnum.AdminBlackListView);
-        }
-
 
         public override void Navigate(ViewsEnum view, Dictionary<string, object> navigationParams = null)
         {

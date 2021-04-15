@@ -35,7 +35,8 @@ namespace Bibliotheque.UI.ViewModels
 
         public UserSessionModel CurrentSession { get; protected set; }
         public bool IsConnected { get; private set; }
-        public RolesEnum AuthorizedRole { get; protected set; }
+        public RolesEnum AuthorizedRole { get; protected set; } = RolesEnum.User;
+        public bool PublicAuthorized { get; set; } = true;
 
         /***************************************************/
         /********* Commandes s'appliquant à la vue *********/
@@ -151,6 +152,27 @@ namespace Bibliotheque.UI.ViewModels
         {
             if (m_NavigationService is null) m_NavigationService = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
             if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserSessionModel>(GlobalInfos.CurrentSession);
+            if (CurrentSession is null)
+            {
+                if (!PublicAuthorized)
+                {
+                    NavigateBackHome();
+                }
+            }
+            else
+            {
+                var userRole = Task.Run(() => m_Repository.GetUserRole(CurrentSession.Id)).Result;
+                if (userRole < AuthorizedRole)
+                {
+                    NavigateBackHome();
+                }
+            }
+        }
+
+        private void NavigateBackHome()
+        {
+            Navigate(ViewsEnum.HomeView);
+            m_NavigationService.Journal.Clear();
         }
 
         public virtual bool PersistInHistory()

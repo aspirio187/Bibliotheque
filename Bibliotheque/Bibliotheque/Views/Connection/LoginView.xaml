@@ -8,19 +8,26 @@
                 xmlns:local="clr-namespace:Bibliotheque.UI.Views"
                 xmlns:helper="clr-namespace:Bibliotheque.UI.Helpers"
                 mc:Ignorable="d"
-                Width="auto" Height="auto">
+                Width="300" Height="auto">
     <Grid Background="White">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" MaxWidth="300">
             <Label Content="Connexion" FontSize="25" Margin="10" HorizontalContentAlignment="Center"/>
             <!-- UserName -->
-            <TextBlock Text="Adresse Email :"  Margin="5 0" Width="200"/>
+            <TextBlock Text="Adresse Email :"  Margin="5 0" />
             <TextBox Text="{Binding Email}" Margin="5"/>
             <!-- Password -->
             <TextBlock Text="Mot de passe :" Margin="5 0"/>
-            <PasswordBox PasswordChar="*" Margin="5" Width="200"
+            <PasswordBox PasswordChar="*" Margin="5"
                          helper:PasswordBoxHelper.Attach="True"
                          helper:PasswordBoxHelper.Password="{Binding Password, Mode=TwoWay}"/>
             <TextBlock Text="{Binding ErrorMessage}" />
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Message}" Foreground="Red" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             <!-- Buttons -->
             <Button Content="Se connecter" Command="{Binding LoginCommand}"/>
             <Button Content="S'enregistrer" Command="{Binding NavigateToRegisterCommand}"/>

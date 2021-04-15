@@ -55,17 +55,6 @@
                 <DataGridTextColumn Header="Emprunts" Binding="{Binding BorrowQuantity}" IsReadOnly="True"/>
                 <DataGridComboBoxColumn Header="Role" SelectedItemBinding="{Binding Role}" ItemsSource="{Binding Source={StaticResource Roles}}"/>
             </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <ItemsControl ItemsSource="{Binding Borrows}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Book}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
         </DataGrid>
 
         <behavior:Interaction.Triggers>

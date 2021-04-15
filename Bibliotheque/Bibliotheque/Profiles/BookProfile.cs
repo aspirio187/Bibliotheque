@@ -46,7 +46,11 @@ namespace Bibliotheque.UI.Profiles
                 .ForMember(
                     dest => dest.PrefacePath,
                     opt => opt.MapFrom(
-                        src => src.Preface));
+                        src => src.Preface))
+                .ForMember(
+                    dest => dest.Genres,
+                    opt => opt.MapFrom(
+                        src => src.BookGenres.Select(bg => bg.Genre)));
 
             CreateMap<BookCopyEntity, BookStateModel>().ReverseMap();
         }

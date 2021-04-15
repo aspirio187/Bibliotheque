@@ -21,6 +21,8 @@ namespace Bibliotheque.UI.Helpers
         HomeView,
         LoginView,
         RegisterView,
+        BooksView,
+        BookDetailsView,
         ProfileView,
         ProfileInformationsView,
         ProfileAddressView,

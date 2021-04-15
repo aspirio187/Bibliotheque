@@ -35,8 +35,8 @@
 
                 <DockPanel HorizontalAlignment="Left" >
                     <Button Content="Accueil" Width="150" Command="{Binding NavigateToHomeCommand}"/>
-                    <Button Content="Livres" Width="150"/>
-                    <Button Content="Administration" Width="150" Command="{Binding NavigateToAdminViewCommand}"/>
+                    <Button Content="Livres" Width="150" Command="{Binding NavigateToBooksCommand}"/>
+                    <Button Content="Administration" Width="{Binding Administration}" Command="{Binding NavigateToAdminViewCommand}" />
                 </DockPanel>
 
                 <DockPanel HorizontalAlignment="Right">

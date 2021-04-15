@@ -294,9 +294,9 @@ namespace Bibliotheque.UI.ViewModels
         public override async Task LoadAsync()
         {
             var books = await m_Repository.GetBooksAsync();
-            Authors = new(books.Select(p => p.Author));
-            Editors = new(books.Select(p => p.Editor));
-            Formats = new(books.Select(p => p.Format));
+            Authors = new(books.Select(p => p.Author).Distinct());
+            Editors = new(books.Select(p => p.Editor).Distinct());
+            Formats = new(books.Select(p => p.Format).Distinct());
             Categories = new(m_Mapper.Map<IEnumerable<CategoryModel>>(await m_Repository.GetCategoriesAsync()));
             Genres = new(m_Mapper.Map<IEnumerable<GenreModel>>(await m_Repository.GetGenresAsync()));
             BookGenres = new();
@@ -310,7 +310,9 @@ namespace Bibliotheque.UI.ViewModels
             CheckError("Genres", "Un livre doit avoir au moins un genre !", genresValid);
             bool bookValid = Book.IsValid();
             CheckError("Livre", "Un ou des champs du livres sont invalides !", bookValid);
-            if (genresValid == true && bookValid == true)
+            bool pathValid = !string.IsNullOrEmpty(ImagePath);
+            CheckError("Image", "Le livre doit contenir au moins une image !", pathValid);
+            if (genresValid == true && bookValid == true && pathValid == true)
             {
                 // Génère un nouveau nom à l'image composé d'un nombre aléatoire pour éviter les doublons en cas de titres similaires
                 Random rnd = new Random();
@@ -344,7 +346,9 @@ namespace Bibliotheque.UI.ViewModels
 
         public void AddGenreToBook()
         {
-            if (Genre.IsValid() && !BookGenres.Contains(Genre))
+            bool valid = Genre is not null;
+            CheckError("NullGenre", "Le genre doit être défini !", valid);
+            if (valid && Genre.IsValid() && !BookGenres.Contains(Genre))
             {
                 BookGenres.Add(Genre);
                 Genres.Remove(Genre);
