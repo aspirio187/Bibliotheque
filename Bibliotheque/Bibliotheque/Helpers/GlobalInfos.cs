@@ -9,11 +9,11 @@ namespace Bibliotheque.UI.Helpers
     public static class GlobalInfos
     {
         // Nom du fichier qui contient les informations de session
-        public static readonly string UserSessionPath = "SessionInformations";
+        public const string USER_SESSION_PATH = "SessionInformations";
         // Nom des paramètres partagés lors de la navigation
-        public static readonly string NavigationService = "NavigationService";
-        public static readonly string CurrentSession = "CurrentSession";
-        public static readonly string IsConnected = "IsConnected";
+        public const string NAVIGATION_SERVICE = "NavigationService";
+        public const string CURRENT_SESSION = "CurrentSession";
+        public const string IS_CONNECTED = "IsConnected";
     }
 
     public enum ViewsEnum

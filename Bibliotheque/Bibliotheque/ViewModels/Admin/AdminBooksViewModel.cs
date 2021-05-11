@@ -118,8 +118,8 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.CurrentSession, CurrentSession },
-                { GlobalInfos.NavigationService, m_NavigationService }
+                { GlobalInfos.CURRENT_SESSION, CurrentSession },
+                { GlobalInfos.NAVIGATION_SERVICE, m_NavigationService }
             };
 
             if (navigationParams != null)

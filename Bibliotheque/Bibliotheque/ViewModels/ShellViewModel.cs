@@ -89,15 +89,15 @@ namespace Bibliotheque.UI.ViewModels
         /// </returns>
         public async Task UserIsConnected()
         {
-            if (File.Exists(GlobalInfos.UserSessionPath))
+            if (File.Exists(GlobalInfos.USER_SESSION_PATH))
             {
-                CurrentSession = await LocalFileHelper.ReadJsonFile<UserSessionModel>(GlobalInfos.UserSessionPath);
+                CurrentSession = await LocalFileHelper.ReadJsonFile<UserSessionModel>(GlobalInfos.USER_SESSION_PATH);
                 if (CurrentSession is not null)
                 {
                     if (!await m_Repository.UserTokenHasChanged(CurrentSession.Id, CurrentSession.Token))
                         IsConnected = true;
                     else
-                        File.Delete(GlobalInfos.UserSessionPath);
+                        File.Delete(GlobalInfos.USER_SESSION_PATH);
 
                     var role = await m_Repository.GetUserRole(CurrentSession.Id);
                     if (role >= RolesEnum.Moderator)
@@ -160,9 +160,9 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.NavigationService, m_NavigationService },
-                { GlobalInfos.IsConnected, IsConnected },
-                { GlobalInfos.CurrentSession, CurrentSession }
+                { GlobalInfos.NAVIGATION_SERVICE, m_NavigationService },
+                { GlobalInfos.IS_CONNECTED, IsConnected },
+                { GlobalInfos.CURRENT_SESSION, CurrentSession }
             };
 
             if (navigationParams != null)

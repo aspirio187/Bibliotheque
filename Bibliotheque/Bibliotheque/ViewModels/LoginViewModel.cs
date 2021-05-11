@@ -93,7 +93,7 @@ namespace Bibliotheque.UI.ViewModels
             bool blackListed = await m_Repository.UserIsBlackListed(response.Id);
             CheckError("Black listé", "Vous êtes actuellement sur la liste noire !", blackListed);
             if (blackListed) return false;
-            bool writeFile = await LocalFileHelper.WriteJsonFile(GlobalInfos.UserSessionPath, response);
+            bool writeFile = await LocalFileHelper.WriteJsonFile(GlobalInfos.USER_SESSION_PATH, response);
             CheckError("Session", "Une erreur inconnue est survenue lors de la connexion !", writeFile);
             if (writeFile == false) return false;
             return true;

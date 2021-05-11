@@ -113,8 +113,8 @@ namespace Bibliotheque.UI.ViewModels
         {
             NavigationParameters navigationParameters = new()
             {
-                { GlobalInfos.NavigationService, m_NavigationService },
-                { GlobalInfos.CurrentSession, CurrentSession }
+                { GlobalInfos.NAVIGATION_SERVICE, m_NavigationService },
+                { GlobalInfos.CURRENT_SESSION, CurrentSession }
             };
 
             if (navigationParams is not null)
@@ -150,8 +150,8 @@ namespace Bibliotheque.UI.ViewModels
 
         public virtual void OnNavigatedTo(NavigationContext navigationContext)
         {
-            if (m_NavigationService is null) m_NavigationService = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NavigationService);
-            if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserSessionModel>(GlobalInfos.CurrentSession);
+            if (m_NavigationService is null) m_NavigationService = navigationContext.Parameters.GetValue<IRegionNavigationService>(GlobalInfos.NAVIGATION_SERVICE);
+            if (CurrentSession is null) CurrentSession = navigationContext.Parameters.GetValue<UserSessionModel>(GlobalInfos.CURRENT_SESSION);
             if (CurrentSession is null)
             {
                 if (!PublicAuthorized)
