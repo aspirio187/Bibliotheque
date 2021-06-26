@@ -11,7 +11,6 @@
     <None Remove="Icons\Close.png" />
     <None Remove="Icons\Minimize.png" />
     <None Remove="Icons\Profile.png" />
-    <None Remove="Images\le throne de fer.jpg" />
     <None Remove="Views\le throne de fer.jpg" />
   </ItemGroup>
 
@@ -35,7 +34,10 @@
     <Resource Include="Icons\Close.png" />
     <Resource Include="Icons\Minimize.png" />
     <Resource Include="Icons\Profile.png" />
-    <Resource Include="Images\le throne de fer.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
 
 </Project>

@@ -104,7 +104,7 @@ namespace Bibliotheque.EntityFramework.Services.Repositories
             // Vérifie si l'entité utilisateur en paramètre est null
             if (user == null) throw new ArgumentNullException(nameof(user));
             // Récupère le role utilisateur pour le nouvel utilisateur
-            if(m_Context.Users.Any(u => u.Role.Name.Equals(RoleData.GetRole(RolesEnum.Admin))))
+            if(m_Context.Users.Any(u => u.Role.Name.Equals(RoleData.GetRole(RolesEnum.SuperAdmin))))
             {
                 user.Role = m_Context.Roles.FirstOrDefault(x => x.Name.Equals(RoleData.GetRole(RolesEnum.User)));
             }
